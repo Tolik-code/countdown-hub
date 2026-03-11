@@ -166,8 +166,8 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
   };
 
   return (
-    <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 overflow-hidden">
+      <form onSubmit={handleSubmit} className="space-y-6 min-w-0">
         {countdown && <input type="hidden" name="id" value={countdown.id} />}
         {/* Hidden inputs ensure all values are in FormData regardless of active tab */}
         <input type="hidden" name="title" value={title} />
@@ -623,7 +623,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         {countdown && <EmbedCode slug={countdown.slug} />}
       </form>
 
-      <div className="lg:sticky lg:top-8">
+      <div className="lg:sticky lg:top-8 min-w-0">
         <h3 className="mb-3 text-sm font-medium text-muted-foreground">
           Live Preview
         </h3>

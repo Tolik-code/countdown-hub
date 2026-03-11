@@ -35,7 +35,7 @@ export function ScrollableTabs({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center max-w-full">
       {canScrollLeft && (
         <button
           type="button"
@@ -48,10 +48,10 @@ export function ScrollableTabs({ children }: { children: React.ReactNode }) {
       )}
       <div
         ref={scrollRef}
-        className="overflow-x-auto scrollbar-hide w-full"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="overflow-x-auto w-full touch-pan-x"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
       >
-        <style dangerouslySetInnerHTML={{ __html: `.scrollbar-hide::-webkit-scrollbar { display: none; }` }} />
+        <style dangerouslySetInnerHTML={{ __html: `.scrollbar-hide::-webkit-scrollbar { display: none; } [style*="scrollbar-width: none"]::-webkit-scrollbar { display: none; }` }} />
         {children}
       </div>
       {canScrollRight && (

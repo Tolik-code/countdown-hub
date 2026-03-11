@@ -174,7 +174,7 @@ export function CountdownPreview({
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center rounded-lg p-4 sm:p-8 overflow-hidden"
+      className="relative flex flex-col items-center justify-center rounded-lg p-4 sm:p-8 overflow-hidden w-full max-w-full"
       style={{
         backgroundColor,
         color: textColor,
@@ -185,6 +185,7 @@ export function CountdownPreview({
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: 250,
+        wordBreak: "break-word",
       }}
     >
       {animation !== "none" && (

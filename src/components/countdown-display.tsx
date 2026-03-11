@@ -92,11 +92,12 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
       <>
         {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
         <div
-          className="countdown-container relative flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 overflow-hidden"
+          className="countdown-container relative flex flex-col items-center justify-center p-4 sm:p-8 overflow-hidden"
           style={{
             backgroundColor: compBg,
             color: compText,
             fontFamily: font,
+            minHeight: "100dvh",
           }}
         >
           {anim !== "none" && <FallingAnimation animation={anim} imageUrl={animImg ?? undefined} />}
@@ -127,7 +128,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         <style dangerouslySetInnerHTML={{ __html: customCss }} />
       )}
       <div
-        className="countdown-container relative flex min-h-screen flex-col items-center justify-center px-3 py-4 sm:p-8 overflow-hidden"
+        className="countdown-container relative flex flex-col items-center justify-center px-3 py-4 sm:p-8 overflow-hidden"
         style={{
           backgroundColor: bgColor,
           color: txtColor,
@@ -135,7 +136,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
           backgroundImage: bgImage ? `url(${bgImage})` : undefined,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          minHeight: minimal ? "100vh" : undefined,
+          minHeight: "100dvh",
         }}
       >
         {anim !== "none" && <FallingAnimation animation={anim} imageUrl={animImg ?? undefined} />}
