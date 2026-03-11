@@ -98,6 +98,9 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
   const [animationImageUrl, setAnimationImageUrl] = useState(
     countdown?.style?.animationImageUrl ?? ""
   );
+  const [seoKeywords, setSeoKeywords] = useState(
+    countdown?.seoKeywords ?? ""
+  );
   const [uploading, setUploading] = useState(false);
   const [uploadingAnim, setUploadingAnim] = useState(false);
 
@@ -253,6 +256,19 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               />
               <p className="mt-1 text-xs text-muted-foreground">
                 Your countdown will be at /{slug || "your-slug"}
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="seoKeywords">SEO Keywords (optional)</Label>
+              <Input
+                id="seoKeywords"
+                name="seoKeywords"
+                value={seoKeywords}
+                onChange={(e) => setSeoKeywords(e.target.value)}
+                placeholder="birthday countdown, event timer, new year"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Comma-separated keywords to help search engines find your countdown.
               </p>
             </div>
           </TabsContent>

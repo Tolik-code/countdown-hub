@@ -102,7 +102,12 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-        <p>CountdownHub &copy; {new Date().getFullYear()}</p>
+        <div className="flex items-center justify-center gap-4">
+          <p>CountdownHub &copy; {new Date().getFullYear()}</p>
+          <span className="text-muted-foreground/40">·</span>
+          <Link href="/privacy" className="hover:underline">Privacy</Link>
+          <Link href="/terms" className="hover:underline">Terms</Link>
+        </div>
       </footer>
     </div>
   );

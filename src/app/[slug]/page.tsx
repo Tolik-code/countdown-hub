@@ -13,20 +13,30 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
   if (!countdown) return { title: "Not Found" };
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const description = countdown.description || `Countdown to ${countdown.title}`;
+  const keywords = countdown.seoKeywords
+    ? countdown.seoKeywords.split(",").map((k) => k.trim())
+    : undefined;
 
   return {
-    title: `${countdown.title} - CountdownHub`,
-    description: countdown.description || `Countdown to ${countdown.title}`,
+    title: `${countdown.title} — Countdown Timer`,
+    description,
+    keywords,
     openGraph: {
       title: countdown.title,
-      description: countdown.description || `Countdown to ${countdown.title}`,
+      description,
+      type: "website",
+      url: `${appUrl}/${slug}`,
       images: [`${appUrl}/${slug}/opengraph-image`],
     },
     twitter: {
       card: "summary_large_image",
       title: countdown.title,
-      description: countdown.description || `Countdown to ${countdown.title}`,
+      description,
       images: [`${appUrl}/${slug}/opengraph-image`],
+    },
+    alternates: {
+      canonical: `${appUrl}/${slug}`,
     },
   };
 }
@@ -48,5 +58,30 @@ export default async function CountdownPage({ params }: SlugPageProps) {
     countdown.status = "COMPLETED";
   }
 
-  return <CountdownDisplay countdown={countdown} />;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: countdown.title,
+    description: countdown.description || `Countdown to ${countdown.title}`,
+    startDate: countdown.targetDate.toISOString(),
+    url: `${appUrl}/${slug}`,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+    location: {
+      "@type": "VirtualLocation",
+      url: `${appUrl}/${slug}`,
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CountdownDisplay countdown={countdown} />
+    </>
+  );
 }

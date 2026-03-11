@@ -11,6 +11,9 @@ const RESERVED_WORDS = [
   "about",
   "help",
   "embed",
+  "privacy",
+  "terms",
+  "sitemap",
 ];
 
 export function validateSlug(slug: string): string | null {

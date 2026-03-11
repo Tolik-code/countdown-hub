@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { Button } from "@/components/ui/button";
 
@@ -8,7 +9,8 @@ export async function Header() {
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="text-xl font-bold">
+        <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Image src="/logo.png" alt="CountdownHub" width={32} height={32} className="rounded" />
           CountdownHub
         </Link>
         <nav className="flex items-center gap-4">

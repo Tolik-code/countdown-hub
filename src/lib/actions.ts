@@ -28,6 +28,7 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
   const description = (formData.get("description") as string) || undefined;
   const slug = formData.get("slug") as string;
   const targetDate = formData.get("targetDate") as string;
+  const seoKeywords = (formData.get("seoKeywords") as string) || undefined;
   const backgroundColor = (formData.get("backgroundColor") as string) || "#ffffff";
   const textColor = (formData.get("textColor") as string) || "#000000";
   const accentColor = (formData.get("accentColor") as string) || "#3b82f6";
@@ -74,6 +75,7 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
       slug,
       targetDate: new Date(targetDate),
       userId,
+      seoKeywords,
       style: {
         create: {
           backgroundColor,
@@ -115,6 +117,7 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
   const description = (formData.get("description") as string) || undefined;
   const slug = formData.get("slug") as string;
   const targetDate = formData.get("targetDate") as string;
+  const seoKeywords = (formData.get("seoKeywords") as string) || undefined;
   const backgroundColor = (formData.get("backgroundColor") as string) || "#ffffff";
   const textColor = (formData.get("textColor") as string) || "#000000";
   const accentColor = (formData.get("accentColor") as string) || "#3b82f6";
@@ -180,6 +183,7 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
       description,
       slug,
       targetDate: new Date(targetDate),
+      seoKeywords,
       style: {
         upsert: {
           create: styleData,
