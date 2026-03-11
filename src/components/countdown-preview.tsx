@@ -221,7 +221,7 @@ function TimeBlock({
       <span className={`${sizeClass} tabular-nums`} style={style}>
         {value.toString().padStart(2, "0")}
       </span>
-      <span className="text-xs uppercase opacity-70">{label}</span>
+      <span className="text-xs uppercase opacity-70" style={{ textShadow: style.textShadow, fontWeight: style.fontWeight }}>{label}</span>
     </div>
   );
 }

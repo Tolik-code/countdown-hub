@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -44,7 +45,9 @@ const features = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -61,12 +64,20 @@ export default function Home() {
           link or embed them on your website. Fully free.
         </p>
         <div className="flex gap-3">
-          <Button asChild size="lg">
-            <Link href="/sign-up">Start for Free</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
+          {userId ? (
+            <Button asChild size="lg">
+              <Link href="/dashboard">Go to Dashboard</Link>
+            </Button>
+          ) : (
+            <>
+              <Button asChild size="lg">
+                <Link href="/sign-up">Start for Free</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/sign-in">Sign In</Link>
+              </Button>
+            </>
+          )}
         </div>
       </section>
 

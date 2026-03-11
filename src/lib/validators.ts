@@ -17,6 +17,7 @@ const RESERVED_WORDS = [
 ];
 
 export function validateSlug(slug: string): string | null {
+  if (!slug) return "Slug is required";
   if (slug.length < 3 || slug.length > 60) {
     return "Slug must be between 3 and 60 characters";
   }
@@ -43,7 +44,7 @@ export async function slugAvailable(
 }
 
 export function validateTitle(title: string): string | null {
-  if (!title.trim()) return "Title is required";
+  if (!title || !title.trim()) return "Title is required";
   if (title.length > 200) return "Title must be under 200 characters";
   return null;
 }

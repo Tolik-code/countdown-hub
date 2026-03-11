@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const description = countdown.description || `Countdown to ${countdown.title}`;
   const keywords = countdown.seoKeywords
-    ? countdown.seoKeywords.split(",").map((k) => k.trim())
+    ? countdown.seoKeywords.split(",").map((k: string) => k.trim()).filter(Boolean)
     : undefined;
 
   return {

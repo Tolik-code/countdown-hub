@@ -246,7 +246,7 @@ function TimeUnit({
       >
         {value.toString().padStart(2, "0")}
       </span>
-      <span className={`mt-1 ${sizeLabel} uppercase tracking-widest opacity-60`}>
+      <span className={`mt-1 ${sizeLabel} uppercase tracking-widest opacity-60`} style={{ textShadow: shadow, fontWeight: weight }}>
         {label}
       </span>
     </div>
