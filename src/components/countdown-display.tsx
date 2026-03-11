@@ -11,10 +11,10 @@ interface CountdownDisplayProps {
 }
 
 const FONT_SIZE_MAP: Record<string, { number: string; label: string; title: string; full: string }> = {
-  sm: { number: "text-2xl sm:text-3xl", label: "text-[10px] sm:text-xs", title: "text-xl sm:text-2xl", full: "text-xl sm:text-2xl" },
-  md: { number: "text-4xl sm:text-6xl md:text-7xl", label: "text-xs sm:text-sm", title: "text-3xl sm:text-4xl md:text-5xl", full: "text-2xl sm:text-4xl" },
-  lg: { number: "text-5xl sm:text-7xl md:text-8xl", label: "text-sm sm:text-base", title: "text-4xl sm:text-5xl md:text-6xl", full: "text-3xl sm:text-5xl" },
-  xl: { number: "text-6xl sm:text-8xl md:text-9xl", label: "text-base sm:text-lg", title: "text-5xl sm:text-6xl md:text-7xl", full: "text-4xl sm:text-6xl" },
+  sm: { number: "text-xl sm:text-3xl", label: "text-[10px] sm:text-xs", title: "text-lg sm:text-2xl", full: "text-lg sm:text-2xl" },
+  md: { number: "text-3xl sm:text-6xl md:text-7xl", label: "text-[10px] sm:text-sm", title: "text-2xl sm:text-4xl md:text-5xl", full: "text-xl sm:text-4xl" },
+  lg: { number: "text-4xl sm:text-7xl md:text-8xl", label: "text-xs sm:text-base", title: "text-3xl sm:text-5xl md:text-6xl", full: "text-2xl sm:text-5xl" },
+  xl: { number: "text-5xl sm:text-8xl md:text-9xl", label: "text-xs sm:text-lg", title: "text-3xl sm:text-6xl md:text-7xl", full: "text-3xl sm:text-6xl" },
 };
 
 const TEXT_SHADOW_MAP: Record<string, string> = {
@@ -92,7 +92,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
       <>
         {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
         <div
-          className="countdown-container relative flex min-h-screen flex-col items-center justify-center p-8 overflow-hidden"
+          className="countdown-container relative flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 overflow-hidden"
           style={{
             backgroundColor: compBg,
             color: compText,
@@ -102,7 +102,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
           {anim !== "none" && <FallingAnimation animation={anim} imageUrl={animImg ?? undefined} />}
           {!minimal && (
             <h1
-              className={`mb-6 text-center ${sizes.title} relative z-10`}
+              className={`mb-4 sm:mb-6 text-center ${sizes.title} relative z-10`}
               style={{ color: compText, textShadow: combinedShadow, fontWeight: fontWeightValue }}
             >
               {countdown.title}
@@ -127,7 +127,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         <style dangerouslySetInnerHTML={{ __html: customCss }} />
       )}
       <div
-        className="countdown-container relative flex min-h-screen flex-col items-center justify-center p-8 overflow-hidden"
+        className="countdown-container relative flex min-h-screen flex-col items-center justify-center px-3 py-4 sm:p-8 overflow-hidden"
         style={{
           backgroundColor: bgColor,
           color: txtColor,
@@ -142,7 +142,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
 
         {!minimal && (
           <h1
-            className={`mb-2 text-center ${sizes.title} relative z-10`}
+            className={`mb-2 text-center ${sizes.title} relative z-10 px-2`}
             style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}
           >
             {countdown.title}
@@ -150,7 +150,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         )}
         {!minimal && countdown.description && (
           <p
-            className="mb-8 text-center text-lg opacity-80 relative z-10"
+            className="mb-4 sm:mb-8 text-center text-base sm:text-lg opacity-80 relative z-10 px-2"
             style={{ color: txtColor, textShadow: combinedShadow }}
           >
             {countdown.description}
@@ -158,7 +158,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         )}
         {minimal && (
           <h2
-            className="mb-4 text-center text-xl font-bold relative z-10"
+            className="mb-4 text-center text-lg sm:text-xl font-bold relative z-10 px-2"
             style={{ color: txtColor, textShadow: combinedShadow }}
           >
             {countdown.title}
@@ -167,12 +167,12 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
 
         {isPaused ? (
           <div className="text-center relative z-10">
-            <p className="text-2xl font-semibold opacity-60" style={{ color: txtColor }}>
+            <p className="text-xl sm:text-2xl font-semibold opacity-60" style={{ color: txtColor }}>
               Countdown Paused
             </p>
           </div>
         ) : (
-          <div className="flex items-center gap-3 sm:gap-6 relative z-10">
+          <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-6 relative z-10">
             {format === "FULL" ? (
               <p
                 className={`${sizes.full} font-bold`}
@@ -207,7 +207,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         )}
 
         {!minimal && (
-          <p className="mt-8 text-sm opacity-50 relative z-10" style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}>
+          <p className="mt-4 sm:mt-8 text-xs sm:text-sm opacity-50 relative z-10 px-2 text-center" style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}>
             {new Date(countdown.targetDate).toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -243,24 +243,24 @@ function TimeUnit({
   weight: number;
 }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center min-w-0">
       <span
-        className={`${sizeNum} tabular-nums`}
+        className={`${sizeNum} tabular-nums leading-tight`}
         style={{ color: accent, textShadow: shadow, fontWeight: weight }}
       >
         {value.toString().padStart(2, "0")}
       </span>
-      <span className={`mt-1 ${sizeLabel} uppercase tracking-widest opacity-60`} style={{ textShadow: shadow, fontWeight: weight }}>
+      <span className={`mt-1 ${sizeLabel} uppercase tracking-wider sm:tracking-widest opacity-60`} style={{ textShadow: shadow, fontWeight: weight }}>
         {label}
       </span>
     </div>
   );
 }
 
-function Colon({ accent, sizeNum }: { accent: string; sizeNum: string }) {
+function Colon({ accent }: { accent: string; sizeNum: string }) {
   return (
     <span
-      className={`mb-4 ${sizeNum} font-bold`}
+      className="mb-4 text-lg sm:text-3xl md:text-5xl font-bold"
       style={{ color: accent, opacity: 0.4 }}
     >
       :
@@ -271,7 +271,7 @@ function Colon({ accent, sizeNum }: { accent: string; sizeNum: string }) {
 function CountdownFooter({ txtColor }: { txtColor: string }) {
   return (
     <footer
-      className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center justify-center gap-3 px-4 py-3 text-xs backdrop-blur-sm"
+      className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs backdrop-blur-sm"
       style={{ color: txtColor, backgroundColor: "rgba(0,0,0,0.25)" }}
     >
       <a href="/" className="opacity-80 hover:opacity-100 transition-opacity underline">Create your own countdown</a>

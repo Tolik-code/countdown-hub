@@ -59,7 +59,7 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
         <p className="mb-4 text-xs text-muted-foreground">
           /{countdown.slug}
         </p>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" asChild>
             <a href={`/${countdown.slug}`} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-3.5" />

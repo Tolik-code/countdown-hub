@@ -12,14 +12,15 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-muted/30">
       <header className="border-b bg-background">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link href="/dashboard" className="text-xl font-bold">
+          <Link href="/dashboard" className="text-lg sm:text-xl font-bold">
             CountdownHub
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button asChild size="sm">
               <Link href="/dashboard/new">
                 <Plus className="size-4" />
-                New Countdown
+                <span className="hidden sm:inline">New Countdown</span>
+                <span className="sm:hidden">New</span>
               </Link>
             </Button>
             <UserButton />

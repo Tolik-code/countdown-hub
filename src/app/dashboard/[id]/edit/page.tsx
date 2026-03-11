@@ -16,7 +16,7 @@ export default async function EditCountdownPage({ params }: EditPageProps) {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Edit Countdown</h1>
+      <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold">Edit Countdown</h1>
       <CountdownForm countdown={countdown} />
     </div>
   );

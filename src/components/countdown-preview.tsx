@@ -118,12 +118,12 @@ export function CountdownPreview({
   if (isCompleted) {
     return (
       <div
-        className="relative flex flex-col items-center justify-center rounded-lg p-8 overflow-hidden"
+        className="relative flex flex-col items-center justify-center rounded-lg p-4 sm:p-8 overflow-hidden"
         style={{
           backgroundColor: completionBgColor,
           color: completionTextColor,
           fontFamily: fontMap[fontFamily] ?? fontFamily,
-          minHeight: 300,
+          minHeight: 250,
         }}
       >
         {animation !== "none" && (
@@ -174,7 +174,7 @@ export function CountdownPreview({
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center rounded-lg p-8 overflow-hidden"
+      className="relative flex flex-col items-center justify-center rounded-lg p-4 sm:p-8 overflow-hidden"
       style={{
         backgroundColor,
         color: textColor,
@@ -184,14 +184,14 @@ export function CountdownPreview({
           : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: 300,
+        minHeight: 250,
       }}
     >
       {animation !== "none" && (
         <FallingAnimation animation={animation} imageUrl={animationImageUrl} />
       )}
       <h2
-        className={`mb-4 ${FONT_SIZE_TITLE_MAP[fontSize] || "text-xl"} relative z-10`}
+        className={`mb-3 sm:mb-4 ${FONT_SIZE_TITLE_MAP[fontSize] || "text-xl"} text-center relative z-10`}
         style={{
           color: textColor,
           textShadow: combinedShadow,
@@ -200,10 +200,10 @@ export function CountdownPreview({
       >
         {title || "Your Countdown"}
       </h2>
-      <div className="flex items-center gap-3 relative z-10">{renderTime()}</div>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 relative z-10">{renderTime()}</div>
       {targetDate && (
         <p
-          className="mt-4 text-xs opacity-50 relative z-10"
+          className="mt-3 sm:mt-4 text-[10px] sm:text-xs opacity-50 relative z-10 text-center"
           style={{ color: textColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}
         >
           {new Date(targetDate).toLocaleDateString("en-US", {

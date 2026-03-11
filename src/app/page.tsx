@@ -53,13 +53,13 @@ export default async function Home() {
       <Header />
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center px-4 py-24 text-center sm:py-32">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+      <section className="flex flex-col items-center justify-center px-4 py-16 text-center sm:py-32">
+        <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl">
           Countdown to What
           <br />
           <span className="text-primary/70">Matters Most</span>
         </h1>
-        <p className="mb-8 max-w-xl text-lg text-muted-foreground">
+        <p className="mb-8 max-w-xl text-base sm:text-lg text-muted-foreground">
           Create beautiful, customizable countdown timer pages. Share them with a
           link or embed them on your website. Fully free.
         </p>
@@ -119,7 +119,7 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 px-4">
           <p>CountdownHub &copy; {new Date().getFullYear()}</p>
           <span className="text-muted-foreground/40">·</span>
           <Link href="/privacy" className="hover:underline">Privacy</Link>

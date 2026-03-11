@@ -9,11 +9,11 @@ export async function Header() {
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+        <Link href="/" className="flex items-center gap-2 text-lg sm:text-xl font-bold">
           <Image src="/logo.png" alt="CountdownHub" width={36} height={36} className="rounded-lg" />
-          CountdownHub
+          <span className="hidden sm:inline">CountdownHub</span>
         </Link>
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-2 sm:gap-4">
           {userId ? (
             <Button asChild variant="default" size="sm">
               <Link href="/dashboard">Dashboard</Link>
