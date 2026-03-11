@@ -16,6 +16,9 @@ export default function DashboardLayout({
             CountdownHub
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/explore">Explore</Link>
+            </Button>
             <Button asChild size="sm">
               <Link href="/dashboard/new">
                 <Plus className="size-4" />

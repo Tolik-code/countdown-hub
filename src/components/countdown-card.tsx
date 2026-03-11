@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { deleteCountdown, toggleCountdownStatus } from "@/lib/actions";
 import type { CountdownWithStyle } from "@/lib/types";
-import { Pencil, Trash2, Pause, Play, ExternalLink } from "lucide-react";
+import { Pencil, Trash2, Pause, Play, ExternalLink, Copy } from "lucide-react";
 
 interface CountdownCardProps {
   countdown: CountdownWithStyle;
@@ -70,6 +70,12 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
             <Link href={`/dashboard/${countdown.id}/edit`}>
               <Pencil className="size-3.5" />
               Edit
+            </Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/dashboard/new?template=${countdown.id}`}>
+              <Copy className="size-3.5" />
+              Template
             </Link>
           </Button>
           <Button

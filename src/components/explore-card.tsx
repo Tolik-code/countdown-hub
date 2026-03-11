@@ -15,8 +15,6 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
   const { isSignedIn } = useAuth();
   const router = useRouter();
 
-  const bgColor = countdown.style?.backgroundColor ?? "#ffffff";
-  const accentColor = countdown.style?.accentColor ?? "#3b82f6";
   const targetDate = new Date(countdown.targetDate);
   const now = new Date();
   const diff = targetDate.getTime() - now.getTime();
@@ -31,13 +29,7 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden">
-      <div
-        className="h-2"
-        style={{
-          background: `linear-gradient(to right, ${bgColor}, ${accentColor})`,
-        }}
-      />
+    <Card>
       <CardContent className="pt-4">
         <h3 className="mb-1 font-semibold truncate">{countdown.title}</h3>
         <p className="mb-1 text-xs text-muted-foreground font-mono">/{countdown.slug}</p>

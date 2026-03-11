@@ -325,7 +325,7 @@ export async function getAllPublicCountdowns(search?: string): Promise<Countdown
 
 export async function getCountdownPublicById(id: string): Promise<CountdownWithStyle | null> {
   return prisma.countdown.findUnique({
-    where: { id, status: "ACTIVE" },
+    where: { id },
     include: { style: true },
   });
 }
