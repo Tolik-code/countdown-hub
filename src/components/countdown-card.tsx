@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { deleteCountdown, toggleCountdownStatus } from "@/lib/actions";
 import type { CountdownWithStyle } from "@/lib/types";
 import { Pencil, Trash2, Pause, Play, ExternalLink, Copy } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/locale-context";
+import { DATE_LOCALE_MAP } from "@/lib/i18n";
 
 interface CountdownCardProps {
   countdown: CountdownWithStyle;
@@ -15,9 +17,10 @@ interface CountdownCardProps {
 
 export function CountdownCard({ countdown }: CountdownCardProps) {
   const [isPending, startTransition] = useTransition();
+  const { t, locale } = useTranslation();
 
   const handleDelete = () => {
-    if (!confirm("Delete this countdown?")) return;
+    if (!confirm(t("common.deleteConfirm"))) return;
     startTransition(() => {
       deleteCountdown(countdown.id);
     });
@@ -46,7 +49,7 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
           <Badge variant={statusColor}>{countdown.status}</Badge>
         </div>
         <p className="text-sm text-muted-foreground">
-          {new Date(countdown.targetDate).toLocaleDateString("en-US", {
+          {new Date(countdown.targetDate).toLocaleDateString(DATE_LOCALE_MAP[locale], {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -63,19 +66,19 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
           <Button variant="outline" size="sm" asChild>
             <a href={`/${countdown.slug}`} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="size-3.5" />
-              View
+              {t("common.view")}
             </a>
           </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href={`/dashboard/${countdown.id}/edit`}>
               <Pencil className="size-3.5" />
-              Edit
+              {t("common.edit")}
             </Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href={`/dashboard/new?template=${countdown.id}`}>
               <Copy className="size-3.5" />
-              Template
+              {t("common.template")}
             </Link>
           </Button>
           <Button
@@ -89,7 +92,7 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
             ) : (
               <Play className="size-3.5" />
             )}
-            {countdown.status === "ACTIVE" ? "Pause" : "Start"}
+            {countdown.status === "ACTIVE" ? t("common.pause") : t("common.start")}
           </Button>
           <Button
             variant="outline"

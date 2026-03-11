@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCountdownById } from "@/lib/actions";
 import { CountdownForm } from "@/components/countdown-form";
 import { ArrowLeft } from "lucide-react";
+import { getServerDictionary, t } from "@/lib/i18n/server";
 
 interface EditPageProps {
   params: Promise<{ id: string }>;
@@ -11,6 +12,7 @@ interface EditPageProps {
 export default async function EditCountdownPage({ params }: EditPageProps) {
   const { id } = await params;
   const countdown = await getCountdownById(id);
+  const { dictionary: d } = await getServerDictionary();
 
   if (!countdown) {
     notFound();
@@ -22,7 +24,7 @@ export default async function EditCountdownPage({ params }: EditPageProps) {
         <Link href="/dashboard" className="inline-flex items-center justify-center rounded-md border p-2 hover:bg-muted transition-colors">
           <ArrowLeft className="size-4" />
         </Link>
-        <h1 className="text-xl sm:text-2xl font-bold">Edit Countdown</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">{t(d, "common.editCountdown")}</h1>
       </div>
       <CountdownForm countdown={countdown} />
     </div>

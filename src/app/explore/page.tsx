@@ -5,11 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import type { Metadata } from "next";
+import { getServerDictionary, t } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Explore Countdowns | CountdownHub",
-  description: "Browse and discover countdown timers created by the community. Find inspiration and use any countdown as a template for your own.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dictionary: d } = await getServerDictionary();
+  return {
+    title: t(d, "explore.metaTitle"),
+    description: t(d, "explore.metaDescription"),
+  };
+}
 
 export default async function ExplorePage({
   searchParams,
@@ -18,15 +22,16 @@ export default async function ExplorePage({
 }) {
   const { q } = await searchParams;
   const countdowns = await getAllPublicCountdowns(q);
+  const { dictionary: d } = await getServerDictionary();
 
   return (
     <div className="min-h-screen">
       <Header />
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-        <h1 className="mb-2 text-2xl font-bold sm:text-3xl">Explore Countdowns</h1>
+        <h1 className="mb-2 text-2xl font-bold sm:text-3xl">{t(d, "explore.title")}</h1>
         <p className="mb-6 text-muted-foreground">
-          Discover countdowns from the community. Use any as a template to create your own.
+          {t(d, "explore.description")}
         </p>
 
         <form className="mb-8 flex gap-2" action="/explore" method="GET">
@@ -34,17 +39,17 @@ export default async function ExplorePage({
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               name="q"
-              placeholder="Search countdowns..."
+              placeholder={t(d, "explore.searchPlaceholder")}
               defaultValue={q ?? ""}
               className="pl-9"
             />
           </div>
-          <Button type="submit">Search</Button>
+          <Button type="submit">{t(d, "common.search")}</Button>
         </form>
 
         {countdowns.length === 0 ? (
           <p className="py-12 text-center text-muted-foreground">
-            {q ? "No countdowns found matching your search." : "No countdowns yet."}
+            {q ? t(d, "explore.noResults") : t(d, "explore.noCountdowns")}
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

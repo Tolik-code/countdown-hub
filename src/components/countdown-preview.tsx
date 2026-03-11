@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { fontMap } from "@/lib/fonts";
 import { FallingAnimation } from "@/components/falling-animation";
+import { useTranslation } from "@/lib/i18n/locale-context";
+import { DATE_LOCALE_MAP } from "@/lib/i18n";
 
 interface CountdownPreviewProps {
   title: string;
@@ -109,6 +111,7 @@ export function CountdownPreview({
   actionButtonHoverColor,
 }: CountdownPreviewProps) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(targetDate));
+  const { t, locale } = useTranslation();
 
   useEffect(() => {
     if (!targetDate) return;
@@ -119,11 +122,6 @@ export function CountdownPreview({
   }, [targetDate]);
 
   const isCompleted = timeLeft.done;
-
-  const textStyle = {
-    textShadow: TEXT_SHADOW_MAP[textShadow] || "none",
-    WebkitTextStroke: TEXT_BORDER_MAP[textBorder] !== "none" ? undefined : undefined,
-  };
 
   const textStrokeShadow = TEXT_BORDER_MAP[textBorder] || "none";
   const combinedShadow = [
@@ -164,11 +162,11 @@ export function CountdownPreview({
       case "HMS":
         return (
           <>
-            <TimeBlock value={timeLeft.hours + timeLeft.days * 24} label="Hours" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.hours + timeLeft.days * 24} label={t("countdown.hours")} sizeClass={sizeClass} style={style} />
             <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.minutes} label="Minutes" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.minutes} label={t("countdown.minutes")} sizeClass={sizeClass} style={style} />
             <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.seconds} label="Seconds" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.seconds} label={t("countdown.seconds")} sizeClass={sizeClass} style={style} />
           </>
         );
       case "FULL":
@@ -180,13 +178,13 @@ export function CountdownPreview({
       default:
         return (
           <>
-            <TimeBlock value={timeLeft.days} label="Days" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.days} label={t("countdown.days")} sizeClass={sizeClass} style={style} />
             <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.hours} label="Hours" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.hours} label={t("countdown.hours")} sizeClass={sizeClass} style={style} />
             <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.minutes} label="Min" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.minutes} label={t("countdown.min")} sizeClass={sizeClass} style={style} />
             <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.seconds} label="Sec" sizeClass={sizeClass} style={style} />
+            <TimeBlock value={timeLeft.seconds} label={t("countdown.sec")} sizeClass={sizeClass} style={style} />
           </>
         );
     }
@@ -219,7 +217,7 @@ export function CountdownPreview({
           fontWeight: fontWeightValue,
         }}
       >
-        {title || "Your Countdown"}
+        {title || t("countdown.yourCountdown")}
       </h2>
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 relative z-10">{renderTime()}</div>
       {actionButtonText && actionButtonUrl && (
@@ -250,7 +248,7 @@ export function CountdownPreview({
           className="mt-3 sm:mt-4 text-[10px] sm:text-xs opacity-50 relative z-10 text-center"
           style={{ color: textColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}
         >
-          {new Date(targetDate).toLocaleDateString("en-US", {
+          {new Date(targetDate).toLocaleDateString(DATE_LOCALE_MAP[locale], {
             weekday: "long",
             year: "numeric",
             month: "long",

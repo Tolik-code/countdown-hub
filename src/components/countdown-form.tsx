@@ -22,6 +22,7 @@ import type { CountdownWithStyle } from "@/lib/types";
 import { Loader2, Upload } from "lucide-react";
 import { EventDateLookup } from "@/components/event-date-lookup";
 import { ScrollableTabs } from "@/components/scrollable-tabs";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 const FONT_OPTIONS = [
   "Inter",
@@ -38,16 +39,16 @@ interface CountdownFormProps {
 }
 
 export function CountdownForm({ countdown, template }: CountdownFormProps) {
-  // When creating from template, use template values (but not slug/seoKeywords)
   const src = countdown ?? template;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const slugTimeout = useRef<ReturnType<typeof setTimeout>>(null);
+  const { t } = useTranslation();
 
   const [title, setTitle] = useState(
-    template ? `Copy of ${template.title}` : (countdown?.title ?? "")
+    template ? t("form.copyOf", { title: template.title }) : (countdown?.title ?? "")
   );
   const [description, setDescription] = useState(src?.description ?? "");
   const [slug, setSlug] = useState(countdown?.slug ?? "");
@@ -192,7 +193,6 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
     <div className="grid gap-6 sm:gap-8 lg:grid-cols-2 overflow-hidden">
       <form onSubmit={handleSubmit} className="space-y-6 min-w-0">
         {countdown && <input type="hidden" name="id" value={countdown.id} />}
-        {/* Hidden inputs ensure all values are in FormData regardless of active tab */}
         <input type="hidden" name="title" value={title} />
         <input type="hidden" name="description" value={description} />
         <input type="hidden" name="targetDate" value={targetDate} />
@@ -230,40 +230,40 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
         <Tabs defaultValue="basic">
           <ScrollableTabs>
             <TabsList className="w-max flex-nowrap">
-              <TabsTrigger value="basic" className="shrink-0">Basic</TabsTrigger>
-              <TabsTrigger value="colors" className="shrink-0">Colors</TabsTrigger>
-              <TabsTrigger value="typography" className="shrink-0">Text</TabsTrigger>
-              <TabsTrigger value="background" className="shrink-0">Background</TabsTrigger>
-              <TabsTrigger value="display" className="shrink-0">Display</TabsTrigger>
-              <TabsTrigger value="completion" className="shrink-0">Completion</TabsTrigger>
-              <TabsTrigger value="action-button" className="shrink-0">Action Button</TabsTrigger>
-              <TabsTrigger value="animation" className="shrink-0">Animation</TabsTrigger>
-              <TabsTrigger value="advanced" className="shrink-0">Advanced</TabsTrigger>
+              <TabsTrigger value="basic" className="shrink-0">{t("form.tabs.basic")}</TabsTrigger>
+              <TabsTrigger value="colors" className="shrink-0">{t("form.tabs.colors")}</TabsTrigger>
+              <TabsTrigger value="typography" className="shrink-0">{t("form.tabs.typography")}</TabsTrigger>
+              <TabsTrigger value="background" className="shrink-0">{t("form.tabs.background")}</TabsTrigger>
+              <TabsTrigger value="display" className="shrink-0">{t("form.tabs.display")}</TabsTrigger>
+              <TabsTrigger value="completion" className="shrink-0">{t("form.tabs.completion")}</TabsTrigger>
+              <TabsTrigger value="action-button" className="shrink-0">{t("form.tabs.actionButton")}</TabsTrigger>
+              <TabsTrigger value="animation" className="shrink-0">{t("form.tabs.animation")}</TabsTrigger>
+              <TabsTrigger value="advanced" className="shrink-0">{t("form.tabs.advanced")}</TabsTrigger>
             </TabsList>
           </ScrollableTabs>
 
           <TabsContent value="basic" className="space-y-4">
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">{t("form.title")}</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="My Countdown"
+                placeholder={t("form.titlePlaceholder")}
                 required
               />
             </div>
             <div>
-              <Label htmlFor="description">Description (optional)</Label>
+              <Label htmlFor="description">{t("form.description")}</Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="What are you counting down to?"
+                placeholder={t("form.descriptionPlaceholder")}
               />
             </div>
             <div>
-              <Label htmlFor="targetDate">Target Date</Label>
+              <Label htmlFor="targetDate">{t("form.targetDate")}</Label>
               <Input
                 id="targetDate"
                 type="datetime-local"
@@ -275,45 +275,45 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
             </div>
             <div>
               <Label htmlFor="slug">
-                URL Slug{" "}
+                {t("form.slug")}{" "}
                 {slugStatus === "checking" && (
-                  <span className="text-muted-foreground">(checking...)</span>
+                  <span className="text-muted-foreground">({t("form.slugChecking")})</span>
                 )}
                 {slugStatus === "available" && (
-                  <span className="text-green-600">(available)</span>
+                  <span className="text-green-600">({t("form.slugAvailable")})</span>
                 )}
                 {slugStatus === "taken" && (
-                  <span className="text-destructive">(taken)</span>
+                  <span className="text-destructive">({t("form.slugTaken")})</span>
                 )}
               </Label>
               <Input
                 id="slug"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
-                placeholder="my-countdown"
+                placeholder={t("form.slugPlaceholder")}
                 required
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Your countdown will be at /{slug || "your-slug"}
+                {t("form.slugHint", { slug: slug || "your-slug" })}
               </p>
             </div>
             <div>
-              <Label htmlFor="seoKeywords">SEO Keywords (optional)</Label>
+              <Label htmlFor="seoKeywords">{t("form.seoKeywords")}</Label>
               <Input
                 id="seoKeywords"
                 value={seoKeywords}
                 onChange={(e) => setSeoKeywords(e.target.value)}
-                placeholder="birthday countdown, event timer, new year"
+                placeholder={t("form.seoKeywordsPlaceholder")}
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Comma-separated keywords to help search engines find your countdown.
+                {t("form.seoKeywordsHint")}
               </p>
             </div>
           </TabsContent>
 
           <TabsContent value="colors" className="space-y-4">
             <div>
-              <Label htmlFor="backgroundColor">Background Color</Label>
+              <Label htmlFor="backgroundColor">{t("form.backgroundColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -330,7 +330,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
             </div>
             <div>
-              <Label htmlFor="textColor">Text Color</Label>
+              <Label htmlFor="textColor">{t("form.textColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -347,7 +347,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
             </div>
             <div>
-              <Label htmlFor="accentColor">Accent Color (numbers)</Label>
+              <Label htmlFor="accentColor">{t("form.accentColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -367,7 +367,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="typography" className="space-y-4">
             <div>
-              <Label>Font Family</Label>
+              <Label>{t("form.fontFamily")}</Label>
               <Select value={fontFamily} onValueChange={setFontFamily}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -382,59 +382,59 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </Select>
             </div>
             <div>
-              <Label>Font Size</Label>
+              <Label>{t("form.fontSize")}</Label>
               <Select value={fontSize} onValueChange={setFontSize}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sm">Small</SelectItem>
-                  <SelectItem value="md">Medium</SelectItem>
-                  <SelectItem value="lg">Large</SelectItem>
-                  <SelectItem value="xl">Extra Large</SelectItem>
+                  <SelectItem value="sm">{t("form.fontSizeSmall")}</SelectItem>
+                  <SelectItem value="md">{t("form.fontSizeMedium")}</SelectItem>
+                  <SelectItem value="lg">{t("form.fontSizeLarge")}</SelectItem>
+                  <SelectItem value="xl">{t("form.fontSizeXl")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Font Weight</Label>
+              <Label>{t("form.fontWeight")}</Label>
               <Select value={fontWeight} onValueChange={setFontWeight}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="bold">Bold</SelectItem>
-                  <SelectItem value="black">Black</SelectItem>
+                  <SelectItem value="light">{t("form.fontWeightLight")}</SelectItem>
+                  <SelectItem value="normal">{t("form.fontWeightNormal")}</SelectItem>
+                  <SelectItem value="bold">{t("form.fontWeightBold")}</SelectItem>
+                  <SelectItem value="black">{t("form.fontWeightBlack")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Text Outline</Label>
+              <Label>{t("form.textOutline")}</Label>
               <Select value={textBorder} onValueChange={setTextBorder}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="thin">Thin Dark</SelectItem>
-                  <SelectItem value="thick">Thick Dark</SelectItem>
-                  <SelectItem value="white">White Outline</SelectItem>
+                  <SelectItem value="none">{t("form.outlineNone")}</SelectItem>
+                  <SelectItem value="thin">{t("form.outlineThin")}</SelectItem>
+                  <SelectItem value="thick">{t("form.outlineThick")}</SelectItem>
+                  <SelectItem value="white">{t("form.outlineWhite")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Text Shadow</Label>
+              <Label>{t("form.textShadow")}</Label>
               <Select value={textShadow} onValueChange={setTextShadow}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="sm">Small</SelectItem>
-                  <SelectItem value="md">Medium</SelectItem>
-                  <SelectItem value="lg">Large</SelectItem>
-                  <SelectItem value="glow">Glow</SelectItem>
+                  <SelectItem value="none">{t("form.shadowNone")}</SelectItem>
+                  <SelectItem value="sm">{t("form.shadowSmall")}</SelectItem>
+                  <SelectItem value="md">{t("form.shadowMedium")}</SelectItem>
+                  <SelectItem value="lg">{t("form.shadowLarge")}</SelectItem>
+                  <SelectItem value="glow">{t("form.shadowGlow")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -442,7 +442,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="background" className="space-y-4">
             <div>
-              <Label>Background Image</Label>
+              <Label>{t("form.backgroundImage")}</Label>
               <div className="mt-2">
                 <label className="flex cursor-pointer items-center gap-2 rounded-md border border-dashed p-4 hover:bg-muted/50">
                   {uploading ? (
@@ -452,8 +452,8 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                   )}
                   <span className="text-sm">
                     {uploading
-                      ? "Uploading..."
-                      : "Click to upload (PNG, JPEG, WebP, max 2MB)"}
+                      ? t("form.uploading")
+                      : t("form.uploadHint")}
                   </span>
                   <input
                     type="file"
@@ -466,7 +466,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
               {backgroundImageUrl && (
                 <div className="mt-2">
-                  <p className="mb-1 text-xs text-muted-foreground">Current image:</p>
+                  <p className="mb-1 text-xs text-muted-foreground">{t("form.currentImage")}</p>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={backgroundImageUrl}
@@ -480,7 +480,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                     className="mt-1"
                     onClick={() => setBackgroundImageUrl("")}
                   >
-                    Remove
+                    {t("common.remove")}
                   </Button>
                 </div>
               )}
@@ -489,19 +489,19 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="display" className="space-y-4">
             <div>
-              <Label>Display Format</Label>
+              <Label>{t("form.displayFormat")}</Label>
               <Select value={displayFormat} onValueChange={setDisplayFormat}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="DHMS">
-                    Days / Hours / Minutes / Seconds
+                    {t("form.formatDHMS")}
                   </SelectItem>
                   <SelectItem value="HMS">
-                    Hours / Minutes / Seconds (no days)
+                    {t("form.formatHMS")}
                   </SelectItem>
-                  <SelectItem value="FULL">Compact text format</SelectItem>
+                  <SelectItem value="FULL">{t("form.formatFull")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -509,19 +509,19 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="completion" className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Customize what visitors see when the countdown reaches zero.
+              {t("form.completionHint")}
             </p>
             <div>
-              <Label htmlFor="completionTitle">Completion Message</Label>
+              <Label htmlFor="completionTitle">{t("form.completionMessage")}</Label>
               <Input
                 id="completionTitle"
                 value={completionTitle}
                 onChange={(e) => setCompletionTitle(e.target.value)}
-                placeholder="Time's Up!"
+                placeholder={t("form.completionPlaceholder")}
               />
             </div>
             <div>
-              <Label>Background Color</Label>
+              <Label>{t("form.completionBgColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -537,7 +537,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
             </div>
             <div>
-              <Label>Text Color</Label>
+              <Label>{t("form.completionTextColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -556,28 +556,28 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="action-button" className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Add a call-to-action button below your countdown timer. Leave text empty to hide the button.
+              {t("form.actionButtonHint")}
             </p>
             <div>
-              <Label htmlFor="actionButtonText">Button Text</Label>
+              <Label htmlFor="actionButtonText">{t("form.buttonText")}</Label>
               <Input
                 id="actionButtonText"
                 value={actionButtonText}
                 onChange={(e) => setActionButtonText(e.target.value)}
-                placeholder="e.g. Get Tickets, Learn More"
+                placeholder={t("form.buttonTextPlaceholder")}
               />
             </div>
             <div>
-              <Label htmlFor="actionButtonUrl">Button URL</Label>
+              <Label htmlFor="actionButtonUrl">{t("form.buttonUrl")}</Label>
               <Input
                 id="actionButtonUrl"
                 value={actionButtonUrl}
                 onChange={(e) => setActionButtonUrl(e.target.value)}
-                placeholder="https://example.com"
+                placeholder={t("form.buttonUrlPlaceholder")}
               />
             </div>
             <div>
-              <Label>Background Color</Label>
+              <Label>{t("form.buttonBgColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -593,7 +593,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
             </div>
             <div>
-              <Label>Text Color</Label>
+              <Label>{t("form.buttonTextColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -609,22 +609,22 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               </div>
             </div>
             <div>
-              <Label>Border Radius</Label>
+              <Label>{t("form.borderRadius")}</Label>
               <Select value={actionButtonRadius} onValueChange={setActionButtonRadius}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="sm">Small</SelectItem>
-                  <SelectItem value="md">Medium</SelectItem>
-                  <SelectItem value="lg">Large</SelectItem>
-                  <SelectItem value="full">Full (Pill)</SelectItem>
+                  <SelectItem value="none">{t("form.radiusNone")}</SelectItem>
+                  <SelectItem value="sm">{t("form.radiusSmall")}</SelectItem>
+                  <SelectItem value="md">{t("form.radiusMedium")}</SelectItem>
+                  <SelectItem value="lg">{t("form.radiusLarge")}</SelectItem>
+                  <SelectItem value="full">{t("form.radiusFull")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Hover Color (optional)</Label>
+              <Label>{t("form.hoverColor")}</Label>
               <div className="flex gap-2">
                 <Input
                   type="color"
@@ -635,7 +635,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                 <Input
                   value={actionButtonHoverColor}
                   onChange={(e) => setActionButtonHoverColor(e.target.value)}
-                  placeholder="Leave empty for no hover effect"
+                  placeholder={t("form.hoverColorPlaceholder")}
                   className="flex-1"
                 />
               </div>
@@ -644,29 +644,29 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="animation" className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Add falling particle animations to your countdown page.
+              {t("form.animationHint")}
             </p>
             <div>
-              <Label>Animation Style</Label>
+              <Label>{t("form.animationStyle")}</Label>
               <Select value={animation} onValueChange={setAnimation}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="confetti">Confetti 🎊</SelectItem>
-                  <SelectItem value="snow">Snow ❄️</SelectItem>
-                  <SelectItem value="hearts">Hearts ❤️</SelectItem>
-                  <SelectItem value="stars">Stars ⭐</SelectItem>
-                  <SelectItem value="leaves">Leaves 🍂</SelectItem>
-                  <SelectItem value="rain">Rain 💧</SelectItem>
-                  <SelectItem value="custom">Custom Image</SelectItem>
+                  <SelectItem value="none">{t("form.animNone")}</SelectItem>
+                  <SelectItem value="confetti">{t("form.animConfetti")}</SelectItem>
+                  <SelectItem value="snow">{t("form.animSnow")}</SelectItem>
+                  <SelectItem value="hearts">{t("form.animHearts")}</SelectItem>
+                  <SelectItem value="stars">{t("form.animStars")}</SelectItem>
+                  <SelectItem value="leaves">{t("form.animLeaves")}</SelectItem>
+                  <SelectItem value="rain">{t("form.animRain")}</SelectItem>
+                  <SelectItem value="custom">{t("form.animCustom")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             {animation === "custom" && (
               <div>
-                <Label>Custom Particle Image</Label>
+                <Label>{t("form.customParticle")}</Label>
                 <div className="mt-2">
                   <label className="flex cursor-pointer items-center gap-2 rounded-md border border-dashed p-4 hover:bg-muted/50">
                     {uploadingAnim ? (
@@ -676,8 +676,8 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                     )}
                     <span className="text-sm">
                       {uploadingAnim
-                        ? "Uploading..."
-                        : "Upload PNG image for falling particles"}
+                        ? t("form.uploading")
+                        : t("form.uploadParticle")}
                     </span>
                     <input
                       type="file"
@@ -702,7 +702,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                       size="sm"
                       onClick={() => setAnimationImageUrl("")}
                     >
-                      Remove
+                      {t("common.remove")}
                     </Button>
                   </div>
                 )}
@@ -712,7 +712,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
           <TabsContent value="advanced" className="space-y-4">
             <div>
-              <Label htmlFor="customCss">Custom CSS</Label>
+              <Label htmlFor="customCss">{t("form.customCss")}</Label>
               <Textarea
                 id="customCss"
                 value={customCss}
@@ -722,7 +722,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                 rows={6}
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Add custom CSS to style your countdown page.
+                {t("form.customCssHint")}
               </p>
             </div>
           </TabsContent>
@@ -732,9 +732,9 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
           {isPending ? (
             <Loader2 className="size-4 animate-spin" />
           ) : countdown ? (
-            "Update Countdown"
+            t("common.updateCountdown")
           ) : (
-            "Create Countdown"
+            t("common.createCountdown")
           )}
         </Button>
 
@@ -743,7 +743,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
 
       <div className="lg:sticky lg:top-8 min-w-0">
         <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-          Live Preview
+          {t("form.livePreview")}
         </h3>
         <Card className="p-0 gap-0 overflow-hidden">
           <CardContent className="p-0">

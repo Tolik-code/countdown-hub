@@ -5,48 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Palette, Share2, Code, Globe, Sparkles } from "lucide-react";
 import { AdBanner } from "@/components/ad-banner";
+import { getServerDictionary, t } from "@/lib/i18n/server";
 
-const features = [
-  {
-    icon: Clock,
-    title: "Real-Time Countdowns",
-    description:
-      "Create precise countdown timers that tick in real-time down to the second.",
-  },
-  {
-    icon: Palette,
-    title: "Full Design Control",
-    description:
-      "Customize colors, fonts, backgrounds, and add custom CSS for pixel-perfect designs.",
-  },
-  {
-    icon: Share2,
-    title: "Share Anywhere",
-    description:
-      "Each countdown gets a unique public URL with rich social media previews.",
-  },
-  {
-    icon: Code,
-    title: "Embeddable",
-    description:
-      "Embed your countdown on any website with a simple iframe snippet.",
-  },
-  {
-    icon: Globe,
-    title: "Public Pages",
-    description:
-      "Beautiful standalone pages for each countdown, optimized for all devices.",
-  },
-  {
-    icon: Sparkles,
-    title: "OG Image Generation",
-    description:
-      "Dynamic social preview images that show your countdown's current state.",
-  },
-];
+const featureKeys = [
+  { icon: Clock, key: "realTime" },
+  { icon: Palette, key: "design" },
+  { icon: Share2, key: "share" },
+  { icon: Code, key: "embed" },
+  { icon: Globe, key: "public" },
+  { icon: Sparkles, key: "og" },
+] as const;
 
 export default async function Home() {
   const { userId } = await auth();
+  const { dictionary: d } = await getServerDictionary();
 
   return (
     <div className="min-h-screen">
@@ -55,31 +27,30 @@ export default async function Home() {
       {/* Hero */}
       <section className="flex flex-col items-center justify-center px-4 py-16 text-center sm:py-32">
         <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-          Countdown to What
+          {t(d, "home.heroTitle1")}
           <br />
-          <span className="text-primary/70">Matters Most</span>
+          <span className="text-primary/70">{t(d, "home.heroTitle2")}</span>
         </h1>
         <p className="mb-8 max-w-xl text-base sm:text-lg text-muted-foreground">
-          Create beautiful, customizable countdown timer pages. Share them with a
-          link or embed them on your website. Fully free.
+          {t(d, "home.heroDescription")}
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           {userId ? (
             <Button asChild size="lg">
-              <Link href="/dashboard">Go to Dashboard</Link>
+              <Link href="/dashboard">{t(d, "common.goToDashboard")}</Link>
             </Button>
           ) : (
             <>
               <Button asChild size="lg">
-                <Link href="/sign-up">Start for Free</Link>
+                <Link href="/sign-up">{t(d, "common.startForFree")}</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/sign-in">Sign In</Link>
+                <Link href="/sign-in">{t(d, "common.signIn")}</Link>
               </Button>
             </>
           )}
           <Button asChild variant="outline" size="lg">
-            <Link href="/explore">Explore Countdowns</Link>
+            <Link href="/explore">{t(d, "common.exploreCountdowns")}</Link>
           </Button>
         </div>
       </section>
@@ -87,16 +58,16 @@ export default async function Home() {
       {/* Features */}
       <section className="mx-auto max-w-6xl px-4 pb-24">
         <h2 className="mb-12 text-center text-2xl font-bold sm:text-3xl">
-          Everything you need
+          {t(d, "home.featuresTitle")}
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <Card key={feature.title}>
+          {featureKeys.map(({ icon: Icon, key }) => (
+            <Card key={key}>
               <CardContent className="pt-6">
-                <feature.icon className="mb-3 size-8 text-primary/70" />
-                <h3 className="mb-1 font-semibold">{feature.title}</h3>
+                <Icon className="mb-3 size-8 text-primary/70" />
+                <h3 className="mb-1 font-semibold">{t(d, `home.features.${key}.title`)}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {feature.description}
+                  {t(d, `home.features.${key}.description`)}
                 </p>
               </CardContent>
             </Card>
@@ -111,22 +82,22 @@ export default async function Home() {
 
       {/* CTA */}
       <section className="border-t bg-muted/30 py-16 text-center">
-        <h2 className="mb-4 text-2xl font-bold">Ready to start counting?</h2>
+        <h2 className="mb-4 text-2xl font-bold">{t(d, "home.ctaTitle")}</h2>
         <p className="mb-6 text-muted-foreground">
-          Create your first countdown in under a minute.
+          {t(d, "home.ctaDescription")}
         </p>
         <Button asChild size="lg">
-          <Link href="/sign-up">Get Started</Link>
+          <Link href="/sign-up">{t(d, "common.getStarted")}</Link>
         </Button>
       </section>
 
       {/* Footer */}
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 px-4">
-          <p>CountdownHub &copy; {new Date().getFullYear()}</p>
-          <span className="text-muted-foreground/40">·</span>
-          <Link href="/privacy" className="hover:underline">Privacy</Link>
-          <Link href="/terms" className="hover:underline">Terms</Link>
+          <p>{t(d, "common.copyright", { year: new Date().getFullYear() })}</p>
+          <span className="text-muted-foreground/40">&middot;</span>
+          <Link href="/privacy" className="hover:underline">{t(d, "common.privacy")}</Link>
+          <Link href="/terms" className="hover:underline">{t(d, "common.terms")}</Link>
         </div>
       </footer>
     </div>

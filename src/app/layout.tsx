@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { fontVariables } from "@/lib/fonts";
+import { getLocaleFromCookies } from "@/lib/i18n/server";
+import { getDictionary } from "@/lib/i18n";
+import { LocaleProvider } from "@/lib/i18n/locale-context";
 import "./globals.css";
 
 const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
@@ -45,18 +48,30 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  ...(process.env.NEXT_PUBLIC_ADSENSE_ID
+    ? {
+        other: {
+          "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_ID,
+        },
+      }
+    : {}),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocaleFromCookies();
+  const dictionary = getDictionary(locale);
+
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang={locale}>
         <body className={`${fontVariables} font-sans antialiased`}>
-          {children}
+          <LocaleProvider locale={locale} dictionary={dictionary}>
+            {children}
+          </LocaleProvider>
           {adsenseId && (
             <Script
               async

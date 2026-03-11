@@ -1,76 +1,69 @@
 import { Header } from "@/components/header";
 import type { Metadata } from "next";
+import { getServerDictionary, t } from "@/lib/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy - CountdownHub",
-  description: "CountdownHub privacy policy. Learn how we handle your data.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { dictionary: d } = await getServerDictionary();
+  return {
+    title: t(d, "privacy.metaTitle"),
+    description: t(d, "privacy.metaDescription"),
+  };
+}
 
-export default function PrivacyPage() {
+function getArray(d: Record<string, unknown>, path: string): string[] {
+  const keys = path.split(".");
+  let val: unknown = d;
+  for (const k of keys) {
+    if (val && typeof val === "object" && k in val) {
+      val = (val as Record<string, unknown>)[k];
+    } else return [];
+  }
+  return Array.isArray(val) ? (val as string[]) : [];
+}
+
+export default async function PrivacyPage() {
+  const { dictionary: d } = await getServerDictionary();
+
   return (
     <div className="min-h-screen">
       <Header />
       <article className="mx-auto max-w-3xl px-4 py-16 prose prose-neutral dark:prose-invert">
-        <h1>Privacy Policy</h1>
-        <p className="text-muted-foreground">Last updated: March 11, 2026</p>
+        <h1>{t(d, "privacy.title")}</h1>
+        <p className="text-muted-foreground">{t(d, "privacy.lastUpdated")}</p>
 
-        <h2>1. Information We Collect</h2>
-        <p>
-          When you create an account on CountdownHub, we collect your email address
-          and basic profile information through our authentication provider (Clerk).
-          When you create countdowns, we store the content you provide including titles,
-          descriptions, dates, and uploaded images.
-        </p>
+        <h2>{t(d, "privacy.s1Title")}</h2>
+        <p>{t(d, "privacy.s1Content")}</p>
 
-        <h2>2. How We Use Your Information</h2>
-        <p>We use your information to:</p>
+        <h2>{t(d, "privacy.s2Title")}</h2>
+        <p>{t(d, "privacy.s2Intro")}</p>
         <ul>
-          <li>Provide and maintain the CountdownHub service</li>
-          <li>Authenticate your account and manage your countdowns</li>
-          <li>Display your public countdown pages to visitors</li>
-          <li>Generate social media preview images for shared countdowns</li>
+          {getArray(d, "privacy.s2Items").map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
         </ul>
 
-        <h2>3. Data Storage</h2>
-        <p>
-          Your data is stored securely using Supabase (PostgreSQL database and file storage).
-          Uploaded images are stored in Supabase Storage. We do not sell or share your
-          personal data with third parties.
-        </p>
+        <h2>{t(d, "privacy.s3Title")}</h2>
+        <p>{t(d, "privacy.s3Content")}</p>
 
-        <h2>4. Public Countdowns</h2>
-        <p>
-          Countdowns you create are accessible via their public URL. Anyone with the
-          link can view the countdown page. Search engines may index public countdown
-          pages. You can delete your countdowns at any time from your dashboard.
-        </p>
+        <h2>{t(d, "privacy.s4Title")}</h2>
+        <p>{t(d, "privacy.s4Content")}</p>
 
-        <h2>5. Third-Party Services</h2>
-        <p>We use the following third-party services:</p>
+        <h2>{t(d, "privacy.s5Title")}</h2>
+        <p>{t(d, "privacy.s5Intro")}</p>
         <ul>
-          <li><strong>Clerk</strong> — Authentication and user management</li>
-          <li><strong>Supabase</strong> — Database and file storage</li>
-          <li><strong>Vercel</strong> — Hosting and deployment</li>
-          <li><strong>Google Gemini API</strong> — AI-powered event date lookup (queries are not stored)</li>
+          {getArray(d, "privacy.s5Items").map((item, i) => (
+            <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <h2>6. Cookies</h2>
-        <p>
-          We use essential cookies for authentication and session management.
-          We do not use tracking or advertising cookies.
-        </p>
+        <h2>{t(d, "privacy.s6Title")}</h2>
+        <p>{t(d, "privacy.s6Content")}</p>
 
-        <h2>7. Data Deletion</h2>
-        <p>
-          You can delete your countdowns and associated data at any time from your
-          dashboard. To delete your account entirely, please contact us.
-        </p>
+        <h2>{t(d, "privacy.s7Title")}</h2>
+        <p>{t(d, "privacy.s7Content")}</p>
 
-        <h2>8. Contact</h2>
-        <p>
-          If you have questions about this privacy policy, please reach out via
-          the contact information on our website.
-        </p>
+        <h2>{t(d, "privacy.s8Title")}</h2>
+        <p>{t(d, "privacy.s8Content")}</p>
       </article>
     </div>
   );

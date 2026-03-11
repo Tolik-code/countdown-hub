@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import type { CountdownWithStyle } from "@/lib/types";
 import { fontMap } from "@/lib/fonts";
 import { FallingAnimation } from "@/components/falling-animation";
+import { useTranslation } from "@/lib/i18n/locale-context";
+import { DATE_LOCALE_MAP } from "@/lib/i18n";
 
 interface CountdownDisplayProps {
   countdown: CountdownWithStyle;
@@ -46,6 +48,7 @@ function calculateTimeLeft(targetDate: Date) {
 
 export function CountdownDisplay({ countdown, minimal = false }: CountdownDisplayProps) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(countdown.targetDate));
+  const { t, locale } = useTranslation();
   const style = countdown.style;
 
   const bgColor = style?.backgroundColor ?? "#ffffff";
@@ -130,7 +133,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
             {compTitle}
           </p>
 
-          {!minimal && <CountdownFooter txtColor={compText} />}
+          {!minimal && <CountdownFooter txtColor={compText} t={t} />}
         </div>
       </>
     );
@@ -183,7 +186,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         {isPaused ? (
           <div className="text-center relative z-10">
             <p className="text-xl sm:text-2xl font-semibold opacity-60" style={{ color: txtColor }}>
-              Countdown Paused
+              {t("countdown.paused")}
             </p>
           </div>
         ) : (
@@ -199,13 +202,13 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
               <>
                 {format === "DHMS" && (
                   <>
-                    <TimeUnit value={timeLeft.days} label="Days" accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
+                    <TimeUnit value={timeLeft.days} label={t("countdown.days")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
                     <Colon accent={accent} sizeNum={sizes.number} />
                   </>
                 )}
                 <TimeUnit
                   value={format === "HMS" ? timeLeft.hours + timeLeft.days * 24 : timeLeft.hours}
-                  label="Hours"
+                  label={t("countdown.hours")}
                   accent={accent}
                   sizeNum={sizes.number}
                   sizeLabel={sizes.label}
@@ -213,9 +216,9 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
                   weight={fontWeightValue}
                 />
                 <Colon accent={accent} sizeNum={sizes.number} />
-                <TimeUnit value={timeLeft.minutes} label="Minutes" accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
+                <TimeUnit value={timeLeft.minutes} label={t("countdown.minutes")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
                 <Colon accent={accent} sizeNum={sizes.number} />
-                <TimeUnit value={timeLeft.seconds} label="Seconds" accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
+                <TimeUnit value={timeLeft.seconds} label={t("countdown.seconds")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
               </>
             )}
           </div>
@@ -234,7 +237,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
 
         {!minimal && (
           <p className="mt-4 sm:mt-8 text-xs sm:text-sm opacity-50 relative z-10 px-2 text-center" style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}>
-            {new Date(countdown.targetDate).toLocaleDateString("en-US", {
+            {new Date(countdown.targetDate).toLocaleDateString(DATE_LOCALE_MAP[locale], {
               weekday: "long",
               year: "numeric",
               month: "long",
@@ -245,7 +248,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
           </p>
         )}
 
-        {!minimal && <CountdownFooter txtColor={txtColor} />}
+        {!minimal && <CountdownFooter txtColor={txtColor} t={t} />}
       </div>
     </>
   );
@@ -332,17 +335,17 @@ function ActionButton({
   );
 }
 
-function CountdownFooter({ txtColor }: { txtColor: string }) {
+function CountdownFooter({ txtColor, t }: { txtColor: string; t: (key: string, params?: Record<string, string | number>) => string }) {
   return (
     <footer
       className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs backdrop-blur-sm"
       style={{ color: txtColor, backgroundColor: "rgba(0,0,0,0.25)" }}
     >
-      <a href="/" className="opacity-80 hover:opacity-100 transition-opacity underline">Create your own countdown</a>
-      <span className="opacity-60">·</span>
-      <a href="/privacy" className="opacity-60 hover:opacity-100 transition-opacity">Privacy</a>
-      <span className="opacity-60">·</span>
-      <a href="/terms" className="opacity-60 hover:opacity-100 transition-opacity">Terms</a>
+      <a href="/" className="opacity-80 hover:opacity-100 transition-opacity underline">{t("common.createYourOwn")}</a>
+      <span className="opacity-60">&middot;</span>
+      <a href="/privacy" className="opacity-60 hover:opacity-100 transition-opacity">{t("common.privacy")}</a>
+      <span className="opacity-60">&middot;</span>
+      <a href="/terms" className="opacity-60 hover:opacity-100 transition-opacity">{t("common.terms")}</a>
     </footer>
   );
 }

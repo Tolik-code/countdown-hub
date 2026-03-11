@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Copy } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 interface EmbedCodeProps {
   slug: string;
@@ -11,6 +12,7 @@ interface EmbedCodeProps {
 
 export function EmbedCode({ slug }: EmbedCodeProps) {
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const embedUrl = `${appUrl}/${slug}/embed`;
   const iframeCode = `<iframe src="${embedUrl}" width="100%" height="300" frameborder="0" style="border:none;"></iframe>`;
@@ -24,7 +26,7 @@ export function EmbedCode({ slug }: EmbedCodeProps) {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm">Embed Code</CardTitle>
+        <CardTitle className="text-sm">{t("form.embedCode")}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="relative">
@@ -42,7 +44,7 @@ export function EmbedCode({ slug }: EmbedCodeProps) {
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Public URL:{" "}
+          {t("form.publicUrl")}{" "}
           <a
             href={`${appUrl}/${slug}`}
             target="_blank"

@@ -2,12 +2,16 @@ import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { getServerDictionary, t } from "@/lib/i18n/server";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { dictionary: d } = await getServerDictionary();
+
   return (
     <div className="min-h-screen bg-muted/30">
       <header className="border-b bg-background">
@@ -16,14 +20,15 @@ export default function DashboardLayout({
             CountdownHub
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
+            <LanguageSwitcher />
             <Button asChild variant="ghost" size="sm">
-              <Link href="/explore">Explore</Link>
+              <Link href="/explore">{t(d, "common.explore")}</Link>
             </Button>
             <Button asChild size="sm">
               <Link href="/dashboard/new">
                 <Plus className="size-4" />
-                <span className="hidden sm:inline">New Countdown</span>
-                <span className="sm:hidden">New</span>
+                <span className="hidden sm:inline">{t(d, "common.newCountdown")}</span>
+                <span className="sm:hidden">{t(d, "common.new")}</span>
               </Link>
             </Button>
             <UserButton />

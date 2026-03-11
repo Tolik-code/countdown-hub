@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Copy } from "lucide-react";
 import type { CountdownWithStyle } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n/locale-context";
+import { DATE_LOCALE_MAP } from "@/lib/i18n";
 
 interface ExploreCardProps {
   countdown: CountdownWithStyle;
@@ -14,6 +16,7 @@ interface ExploreCardProps {
 export function ExploreCard({ countdown }: ExploreCardProps) {
   const { isSignedIn } = useAuth();
   const router = useRouter();
+  const { t, locale } = useTranslation();
 
   const targetDate = new Date(countdown.targetDate);
   const now = new Date();
@@ -35,10 +38,10 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
         <p className="mb-1 text-xs text-muted-foreground font-mono">/{countdown.slug}</p>
         <p className="mb-3 text-sm text-muted-foreground">
           {daysLeft > 0
-            ? `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`
-            : "Completed"}
+            ? t("explore.daysLeft", { count: daysLeft })
+            : t("common.completed")}
           {" · "}
-          {targetDate.toLocaleDateString("en-US", {
+          {targetDate.toLocaleDateString(DATE_LOCALE_MAP[locale], {
             month: "short",
             day: "numeric",
             year: "numeric",
@@ -48,7 +51,7 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
           <Button asChild variant="outline" size="sm" className="flex-1">
             <a href={`/${countdown.slug}`} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="mr-1.5 size-3.5" />
-              View
+              {t("common.view")}
             </a>
           </Button>
           <Button
@@ -58,7 +61,7 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
             onClick={handleUseAsTemplate}
           >
             <Copy className="mr-1.5 size-3.5" />
-            Use as Template
+            {t("explore.useAsTemplate")}
           </Button>
         </div>
       </CardContent>
