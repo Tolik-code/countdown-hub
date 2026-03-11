@@ -270,12 +270,15 @@ function Colon({ accent, sizeNum }: { accent: string; sizeNum: string }) {
 
 function CountdownFooter({ txtColor }: { txtColor: string }) {
   return (
-    <footer className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center justify-center gap-3 px-4 py-3 text-xs" style={{ color: txtColor, opacity: 0.5 }}>
-      <a href="/" className="hover:opacity-100 transition-opacity">Create your own countdown</a>
-      <span>·</span>
-      <a href="/privacy" className="hover:opacity-100 transition-opacity">Privacy</a>
-      <span>·</span>
-      <a href="/terms" className="hover:opacity-100 transition-opacity">Terms</a>
+    <footer
+      className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center justify-center gap-3 px-4 py-3 text-xs backdrop-blur-sm"
+      style={{ color: txtColor, backgroundColor: "rgba(0,0,0,0.25)" }}
+    >
+      <a href="/" className="opacity-80 hover:opacity-100 transition-opacity underline">Create your own countdown</a>
+      <span className="opacity-60">·</span>
+      <a href="/privacy" className="opacity-60 hover:opacity-100 transition-opacity">Privacy</a>
+      <span className="opacity-60">·</span>
+      <a href="/terms" className="opacity-60 hover:opacity-100 transition-opacity">Terms</a>
     </footer>
   );
 }
