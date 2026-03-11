@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { CountdownWithStyle } from "@/lib/types";
 import { fontMap } from "@/lib/fonts";
 import { FallingAnimation } from "@/components/falling-animation";
@@ -66,6 +66,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
   const compTitle = style?.completionTitle ?? "Time's Up!";
   const compBg = style?.completionBgColor ?? "#000000";
   const compText = style?.completionTextColor ?? "#ffffff";
+  const cStyle = style?.cardStyle ?? "none";
   const anim = style?.animation ?? "none";
   const animImg = style?.animationImageUrl;
   const abText = style?.actionButtonText;
@@ -202,23 +203,49 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
               <>
                 {format === "DHMS" && (
                   <>
-                    <TimeUnit value={timeLeft.days} label={t("countdown.days")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
-                    <Colon accent={accent} sizeNum={sizes.number} />
+                    {cStyle === "flip" ? (
+                      <FlipTimeUnit value={timeLeft.days} label={t("countdown.days")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                    ) : (
+                      <TimeUnit value={timeLeft.days} label={t("countdown.days")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                    )}
+                    <Colon accent={accent} sizeNum={sizes.number} cardStyle={cStyle} />
                   </>
                 )}
-                <TimeUnit
-                  value={format === "HMS" ? timeLeft.hours + timeLeft.days * 24 : timeLeft.hours}
-                  label={t("countdown.hours")}
-                  accent={accent}
-                  sizeNum={sizes.number}
-                  sizeLabel={sizes.label}
-                  shadow={combinedShadow}
-                  weight={fontWeightValue}
-                />
-                <Colon accent={accent} sizeNum={sizes.number} />
-                <TimeUnit value={timeLeft.minutes} label={t("countdown.minutes")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
-                <Colon accent={accent} sizeNum={sizes.number} />
-                <TimeUnit value={timeLeft.seconds} label={t("countdown.seconds")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} />
+                {cStyle === "flip" ? (
+                  <FlipTimeUnit
+                    value={format === "HMS" ? timeLeft.hours + timeLeft.days * 24 : timeLeft.hours}
+                    label={t("countdown.hours")}
+                    accent={accent}
+                    sizeNum={sizes.number}
+                    sizeLabel={sizes.label}
+                    shadow={combinedShadow}
+                    weight={fontWeightValue}
+                    cardStyle={cStyle}
+                  />
+                ) : (
+                  <TimeUnit
+                    value={format === "HMS" ? timeLeft.hours + timeLeft.days * 24 : timeLeft.hours}
+                    label={t("countdown.hours")}
+                    accent={accent}
+                    sizeNum={sizes.number}
+                    sizeLabel={sizes.label}
+                    shadow={combinedShadow}
+                    weight={fontWeightValue}
+                    cardStyle={cStyle}
+                  />
+                )}
+                <Colon accent={accent} sizeNum={sizes.number} cardStyle={cStyle} />
+                {cStyle === "flip" ? (
+                  <FlipTimeUnit value={timeLeft.minutes} label={t("countdown.minutes")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                ) : (
+                  <TimeUnit value={timeLeft.minutes} label={t("countdown.minutes")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                )}
+                <Colon accent={accent} sizeNum={sizes.number} cardStyle={cStyle} />
+                {cStyle === "flip" ? (
+                  <FlipTimeUnit value={timeLeft.seconds} label={t("countdown.seconds")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                ) : (
+                  <TimeUnit value={timeLeft.seconds} label={t("countdown.seconds")} accent={accent} sizeNum={sizes.number} sizeLabel={sizes.label} shadow={combinedShadow} weight={fontWeightValue} cardStyle={cStyle} />
+                )}
               </>
             )}
           </div>
@@ -254,6 +281,23 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
   );
 }
 
+function getCardWrapperStyles(cardStyle: string, accent: string): { className: string; style: React.CSSProperties } {
+  switch (cardStyle) {
+    case "cards":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3", style: { backgroundColor: `${accent}1a` } };
+    case "glass":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3 backdrop-blur-md border border-white/20", style: { backgroundColor: "rgba(255,255,255,0.1)" } };
+    case "neon":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3", style: { backgroundColor: "rgba(0,0,0,0.3)", boxShadow: `0 0 10px ${accent}80, 0 0 20px ${accent}40, inset 0 0 10px ${accent}20`, border: `1px solid ${accent}60` } };
+    case "minimal":
+      return { className: "rounded-md px-3 py-2 sm:px-5 sm:py-3", style: { border: `1px solid ${accent}40` } };
+    case "flip":
+      return { className: "rounded-md overflow-hidden", style: { backgroundColor: `${accent}1a` } };
+    default:
+      return { className: "", style: {} };
+  }
+}
+
 function TimeUnit({
   value,
   label,
@@ -262,6 +306,7 @@ function TimeUnit({
   sizeLabel,
   shadow,
   weight,
+  cardStyle = "none",
 }: {
   value: number;
   label: string;
@@ -270,9 +315,11 @@ function TimeUnit({
   sizeLabel: string;
   shadow: string;
   weight: number;
+  cardStyle?: string;
 }) {
+  const card = getCardWrapperStyles(cardStyle, accent);
   return (
-    <div className="flex flex-col items-center min-w-0">
+    <div className={`flex flex-col items-center min-w-0 ${card.className}`} style={card.style}>
       <span
         className={`${sizeNum} tabular-nums leading-tight`}
         style={{ color: accent, textShadow: shadow, fontWeight: weight }}
@@ -286,10 +333,62 @@ function TimeUnit({
   );
 }
 
-function Colon({ accent }: { accent: string; sizeNum: string }) {
+function FlipTimeUnit({
+  value,
+  label,
+  accent,
+  sizeNum,
+  sizeLabel,
+  shadow,
+  weight,
+  cardStyle = "flip",
+}: {
+  value: number;
+  label: string;
+  accent: string;
+  sizeNum: string;
+  sizeLabel: string;
+  shadow: string;
+  weight: number;
+  cardStyle?: string;
+}) {
+  const prevRef = useRef(value);
+  const elRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (prevRef.current !== value && elRef.current) {
+      elRef.current.classList.remove("flip-animate");
+      void elRef.current.offsetWidth;
+      elRef.current.classList.add("flip-animate");
+      prevRef.current = value;
+    }
+  }, [value]);
+
+  const card = getCardWrapperStyles(cardStyle, accent);
+  const display = value.toString().padStart(2, "0");
+
+  return (
+    <div className={`flex flex-col items-center min-w-0 ${card.className}`} style={card.style}>
+      <div ref={elRef} className="relative" style={{ perspective: "300px" }}>
+        <div className="overflow-hidden" style={{ clipPath: "inset(0 0 50% 0)" }}>
+          <span className={`${sizeNum} tabular-nums leading-tight block`} style={{ color: accent, textShadow: shadow, fontWeight: weight }}>{display}</span>
+        </div>
+        <div className="absolute left-0 right-0 top-1/2 h-px opacity-30" style={{ backgroundColor: accent }} />
+        <div className="overflow-hidden" style={{ clipPath: "inset(50% 0 0 0)", marginTop: "-100%" }}>
+          <span className={`${sizeNum} tabular-nums leading-tight block`} style={{ color: accent, textShadow: shadow, fontWeight: weight }}>{display}</span>
+        </div>
+      </div>
+      <span className={`mt-1 ${sizeLabel} uppercase tracking-wider sm:tracking-widest opacity-60`} style={{ textShadow: shadow, fontWeight: weight }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function Colon({ accent, cardStyle = "none" }: { accent: string; sizeNum: string; cardStyle?: string }) {
   return (
     <span
-      className="mb-4 text-lg sm:text-3xl md:text-5xl font-bold"
+      className={`mb-4 text-lg sm:text-3xl md:text-5xl font-bold ${cardStyle !== "none" ? "self-center" : ""}`}
       style={{ color: accent, opacity: 0.4 }}
     >
       :

@@ -5,7 +5,7 @@ import type { Locale } from "@/lib/i18n";
 
 const locales: { code: Locale; label: string }[] = [
   { code: "en", label: "EN" },
-  { code: "uk", label: "UK" },
+  { code: "uk", label: "UA" },
 ];
 
 export function LanguageSwitcher() {

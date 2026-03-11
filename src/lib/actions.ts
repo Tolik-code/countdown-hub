@@ -43,6 +43,8 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
   const completionTitle = (formData.get("completionTitle") as string) || "Time's Up!";
   const completionBgColor = (formData.get("completionBgColor") as string) || "#000000";
   const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
+  const cardStyleRaw = (formData.get("cardStyle") as string) || "none";
+  const cardStyle = ["none", "cards", "flip", "glass", "neon", "minimal"].includes(cardStyleRaw) ? cardStyleRaw : "none";
   const animation = (formData.get("animation") as string) || "none";
   const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
   const actionButtonText = (formData.get("actionButtonText") as string) || undefined;
@@ -98,6 +100,7 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
           completionTitle,
           completionBgColor,
           completionTextColor,
+          cardStyle,
           animation,
           animationImageUrl,
           actionButtonText,
@@ -144,6 +147,8 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
   const completionTitle = (formData.get("completionTitle") as string) || "Time's Up!";
   const completionBgColor = (formData.get("completionBgColor") as string) || "#000000";
   const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
+  const cardStyleRaw = (formData.get("cardStyle") as string) || "none";
+  const cardStyle = ["none", "cards", "flip", "glass", "neon", "minimal"].includes(cardStyleRaw) ? cardStyleRaw : "none";
   const animation = (formData.get("animation") as string) || "none";
   const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
   const actionButtonText = (formData.get("actionButtonText") as string) || undefined;
@@ -190,6 +195,7 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
     completionTitle,
     completionBgColor,
     completionTextColor,
+    cardStyle,
     animation,
     animationImageUrl,
     actionButtonText,

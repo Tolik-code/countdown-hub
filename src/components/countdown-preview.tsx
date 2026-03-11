@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { fontMap } from "@/lib/fonts";
 import { FallingAnimation } from "@/components/falling-animation";
 import { useTranslation } from "@/lib/i18n/locale-context";
@@ -23,6 +23,7 @@ interface CountdownPreviewProps {
   completionTitle?: string;
   completionBgColor?: string;
   completionTextColor?: string;
+  cardStyle?: string;
   animation?: string;
   animationImageUrl?: string;
   actionButtonText?: string;
@@ -101,6 +102,7 @@ export function CountdownPreview({
   completionTitle = "Time's Up!",
   completionBgColor = "#000000",
   completionTextColor = "#ffffff",
+  cardStyle = "none",
   animation = "none",
   animationImageUrl,
   actionButtonText,
@@ -157,16 +159,17 @@ export function CountdownPreview({
   const renderTime = () => {
     const sizeClass = FONT_SIZE_MAP[fontSize] || "text-3xl";
     const style = { color: accentColor, textShadow: combinedShadow, fontWeight: fontWeightValue };
+    const Block = cardStyle === "flip" ? FlipTimeBlock : TimeBlock;
 
     switch (displayFormat) {
       case "HMS":
         return (
           <>
-            <TimeBlock value={timeLeft.hours + timeLeft.days * 24} label={t("countdown.hours")} sizeClass={sizeClass} style={style} />
-            <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.minutes} label={t("countdown.minutes")} sizeClass={sizeClass} style={style} />
-            <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.seconds} label={t("countdown.seconds")} sizeClass={sizeClass} style={style} />
+            <Block value={timeLeft.hours + timeLeft.days * 24} label={t("countdown.hours")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
+            <Separator accentColor={accentColor} cardStyle={cardStyle} />
+            <Block value={timeLeft.minutes} label={t("countdown.minutes")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
+            <Separator accentColor={accentColor} cardStyle={cardStyle} />
+            <Block value={timeLeft.seconds} label={t("countdown.seconds")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
           </>
         );
       case "FULL":
@@ -178,13 +181,13 @@ export function CountdownPreview({
       default:
         return (
           <>
-            <TimeBlock value={timeLeft.days} label={t("countdown.days")} sizeClass={sizeClass} style={style} />
-            <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.hours} label={t("countdown.hours")} sizeClass={sizeClass} style={style} />
-            <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.minutes} label={t("countdown.min")} sizeClass={sizeClass} style={style} />
-            <Separator accentColor={accentColor} />
-            <TimeBlock value={timeLeft.seconds} label={t("countdown.sec")} sizeClass={sizeClass} style={style} />
+            <Block value={timeLeft.days} label={t("countdown.days")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
+            <Separator accentColor={accentColor} cardStyle={cardStyle} />
+            <Block value={timeLeft.hours} label={t("countdown.hours")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
+            <Separator accentColor={accentColor} cardStyle={cardStyle} />
+            <Block value={timeLeft.minutes} label={t("countdown.min")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
+            <Separator accentColor={accentColor} cardStyle={cardStyle} />
+            <Block value={timeLeft.seconds} label={t("countdown.sec")} sizeClass={sizeClass} style={style} cardStyle={cardStyle} accentColor={accentColor} />
           </>
         );
     }
@@ -262,19 +265,41 @@ export function CountdownPreview({
   );
 }
 
+function getCardWrapperStyles(cardStyle: string, accent: string): { className: string; style: React.CSSProperties } {
+  switch (cardStyle) {
+    case "cards":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3", style: { backgroundColor: `${accent}1a` } };
+    case "glass":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3 backdrop-blur-md border border-white/20", style: { backgroundColor: "rgba(255,255,255,0.1)" } };
+    case "neon":
+      return { className: "rounded-lg px-3 py-2 sm:px-5 sm:py-3", style: { backgroundColor: "rgba(0,0,0,0.3)", boxShadow: `0 0 10px ${accent}80, 0 0 20px ${accent}40, inset 0 0 10px ${accent}20`, border: `1px solid ${accent}60` } };
+    case "minimal":
+      return { className: "rounded-md px-3 py-2 sm:px-5 sm:py-3", style: { border: `1px solid ${accent}40` } };
+    case "flip":
+      return { className: "rounded-md overflow-hidden", style: { backgroundColor: `${accent}1a` } };
+    default:
+      return { className: "", style: {} };
+  }
+}
+
 function TimeBlock({
   value,
   label,
   sizeClass,
   style,
+  cardStyle = "none",
+  accentColor = "#3b82f6",
 }: {
   value: number;
   label: string;
   sizeClass: string;
   style: React.CSSProperties;
+  cardStyle?: string;
+  accentColor?: string;
 }) {
+  const card = getCardWrapperStyles(cardStyle, accentColor);
   return (
-    <div className="flex flex-col items-center">
+    <div className={`flex flex-col items-center ${card.className}`} style={card.style}>
       <span className={`${sizeClass} tabular-nums`} style={style}>
         {value.toString().padStart(2, "0")}
       </span>
@@ -283,10 +308,59 @@ function TimeBlock({
   );
 }
 
-function Separator({ accentColor }: { accentColor: string }) {
+function FlipTimeBlock({
+  value,
+  label,
+  sizeClass,
+  style,
+  cardStyle = "flip",
+  accentColor = "#3b82f6",
+}: {
+  value: number;
+  label: string;
+  sizeClass: string;
+  style: React.CSSProperties;
+  cardStyle?: string;
+  accentColor?: string;
+}) {
+  const prevRef = useRef(value);
+  const elRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (prevRef.current !== value && elRef.current) {
+      elRef.current.classList.remove("flip-animate");
+      void elRef.current.offsetWidth;
+      elRef.current.classList.add("flip-animate");
+      prevRef.current = value;
+    }
+  }, [value]);
+
+  const card = getCardWrapperStyles(cardStyle, accentColor);
+  const display = value.toString().padStart(2, "0");
+
+  return (
+    <div className={`flex flex-col items-center ${card.className}`} style={card.style}>
+      <div ref={elRef} className="relative" style={{ perspective: "300px" }}>
+        {/* Top half */}
+        <div className="overflow-hidden" style={{ clipPath: "inset(0 0 50% 0)" }}>
+          <span className={`${sizeClass} tabular-nums block`} style={style}>{display}</span>
+        </div>
+        {/* Divider line */}
+        <div className="absolute left-0 right-0 top-1/2 h-px opacity-30" style={{ backgroundColor: accentColor }} />
+        {/* Bottom half */}
+        <div className="overflow-hidden" style={{ clipPath: "inset(50% 0 0 0)", marginTop: "-100%" }}>
+          <span className={`${sizeClass} tabular-nums block`} style={style}>{display}</span>
+        </div>
+      </div>
+      <span className="text-xs uppercase opacity-70" style={{ textShadow: style.textShadow, fontWeight: style.fontWeight }}>{label}</span>
+    </div>
+  );
+}
+
+function Separator({ accentColor, cardStyle = "none" }: { accentColor: string; cardStyle?: string }) {
   return (
     <span
-      className="text-2xl font-bold"
+      className={`text-2xl font-bold ${cardStyle !== "none" ? "self-center" : ""}`}
       style={{ color: accentColor, opacity: 0.5 }}
     >
       :

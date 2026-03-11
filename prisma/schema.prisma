@@ -58,6 +58,9 @@ model CountdownStyle {
   completionBgColor  String        @default("#000000")
   completionTextColor String       @default("#ffffff")
 
+  // Card style
+  cardStyle          String        @default("none")
+
   // Animation
   animation          String        @default("none")
   animationImageUrl  String?

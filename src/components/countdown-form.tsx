@@ -99,6 +99,9 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
   const [completionTextColor, setCompletionTextColor] = useState(
     src?.style?.completionTextColor ?? "#ffffff"
   );
+  const [cardStyle, setCardStyle] = useState(
+    src?.style?.cardStyle ?? "none"
+  );
   const [animation, setAnimation] = useState(
     src?.style?.animation ?? "none"
   );
@@ -211,6 +214,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
         <input type="hidden" name="completionTitle" value={completionTitle} />
         <input type="hidden" name="completionBgColor" value={completionBgColor} />
         <input type="hidden" name="completionTextColor" value={completionTextColor} />
+        <input type="hidden" name="cardStyle" value={cardStyle} />
         <input type="hidden" name="animation" value={animation} />
         <input type="hidden" name="animationImageUrl" value={animationImageUrl} />
         <input type="hidden" name="customCss" value={customCss} />
@@ -505,6 +509,22 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <Label>{t("form.cardStyle")}</Label>
+              <Select value={cardStyle} onValueChange={setCardStyle}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t("form.cardStyleNone")}</SelectItem>
+                  <SelectItem value="cards">{t("form.cardStyleCards")}</SelectItem>
+                  <SelectItem value="flip">{t("form.cardStyleFlip")}</SelectItem>
+                  <SelectItem value="glass">{t("form.cardStyleGlass")}</SelectItem>
+                  <SelectItem value="neon">{t("form.cardStyleNeon")}</SelectItem>
+                  <SelectItem value="minimal">{t("form.cardStyleMinimal")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </TabsContent>
 
           <TabsContent value="completion" className="space-y-4">
@@ -764,6 +784,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
               completionTitle={completionTitle}
               completionBgColor={completionBgColor}
               completionTextColor={completionTextColor}
+              cardStyle={cardStyle}
               animation={animation}
               animationImageUrl={animationImageUrl || undefined}
               actionButtonText={actionButtonText || undefined}
