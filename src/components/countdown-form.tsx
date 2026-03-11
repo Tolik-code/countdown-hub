@@ -169,6 +169,15 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
     <div className="grid gap-8 lg:grid-cols-2">
       <form onSubmit={handleSubmit} className="space-y-6">
         {countdown && <input type="hidden" name="id" value={countdown.id} />}
+        {/* Hidden inputs ensure all values are in FormData regardless of active tab */}
+        <input type="hidden" name="title" value={title} />
+        <input type="hidden" name="description" value={description} />
+        <input type="hidden" name="targetDate" value={targetDate} />
+        <input type="hidden" name="slug" value={slug} />
+        <input type="hidden" name="seoKeywords" value={seoKeywords} />
+        <input type="hidden" name="backgroundColor" value={backgroundColor} />
+        <input type="hidden" name="textColor" value={textColor} />
+        <input type="hidden" name="accentColor" value={accentColor} />
         <input type="hidden" name="backgroundImageUrl" value={backgroundImageUrl} />
         <input type="hidden" name="displayFormat" value={displayFormat} />
         <input type="hidden" name="fontFamily" value={fontFamily} />
@@ -181,6 +190,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         <input type="hidden" name="completionTextColor" value={completionTextColor} />
         <input type="hidden" name="animation" value={animation} />
         <input type="hidden" name="animationImageUrl" value={animationImageUrl} />
+        <input type="hidden" name="customCss" value={customCss} />
 
         {error && (
           <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
@@ -207,7 +217,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                name="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="My Countdown"
@@ -218,7 +227,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <Label htmlFor="description">Description (optional)</Label>
               <Textarea
                 id="description"
-                name="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="What are you counting down to?"
@@ -228,7 +236,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <Label htmlFor="targetDate">Target Date</Label>
               <Input
                 id="targetDate"
-                name="targetDate"
                 type="datetime-local"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
@@ -251,7 +258,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               </Label>
               <Input
                 id="slug"
-                name="slug"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
                 placeholder="my-countdown"
@@ -265,7 +271,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <Label htmlFor="seoKeywords">SEO Keywords (optional)</Label>
               <Input
                 id="seoKeywords"
-                name="seoKeywords"
                 value={seoKeywords}
                 onChange={(e) => setSeoKeywords(e.target.value)}
                 placeholder="birthday countdown, event timer, new year"
@@ -283,7 +288,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 <Input
                   type="color"
                   id="backgroundColor"
-                  name="backgroundColor"
                   value={backgroundColor}
                   onChange={(e) => setBackgroundColor(e.target.value)}
                   className="h-10 w-14 cursor-pointer p-1"
@@ -301,7 +305,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 <Input
                   type="color"
                   id="textColor"
-                  name="textColor"
                   value={textColor}
                   onChange={(e) => setTextColor(e.target.value)}
                   className="h-10 w-14 cursor-pointer p-1"
@@ -319,7 +322,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 <Input
                   type="color"
                   id="accentColor"
-                  name="accentColor"
                   value={accentColor}
                   onChange={(e) => setAccentColor(e.target.value)}
                   className="h-10 w-14 cursor-pointer p-1"
@@ -595,7 +597,6 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <Label htmlFor="customCss">Custom CSS</Label>
               <Textarea
                 id="customCss"
-                name="customCss"
                 value={customCss}
                 onChange={(e) => setCustomCss(e.target.value)}
                 placeholder=".countdown-container { ... }"
