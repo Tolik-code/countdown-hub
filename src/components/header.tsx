@@ -10,7 +10,7 @@ export async function Header() {
     <header className="border-b bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-          <Image src="/logo.png" alt="CountdownHub" width={36} height={36} className="rounded-lg bg-slate-100 p-0.5" />
+          <Image src="/logo.png" alt="CountdownHub" width={36} height={36} className="rounded-lg" />
           CountdownHub
         </Link>
         <nav className="flex items-center gap-4">
