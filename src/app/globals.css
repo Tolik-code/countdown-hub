@@ -121,4 +121,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  label,
+  [data-slot="label"] {
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
 }

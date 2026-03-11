@@ -16,7 +16,10 @@ interface CountdownPreviewProps {
 }
 
 function calculateTimeLeft(targetDate: string) {
-  const diff = new Date(targetDate).getTime() - Date.now();
+  if (!targetDate) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const time = new Date(targetDate).getTime();
+  if (isNaN(time)) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const diff = time - Date.now();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   return {
     days: Math.floor(diff / (1000 * 60 * 60 * 24)),

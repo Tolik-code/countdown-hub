@@ -20,6 +20,7 @@ import { EmbedCode } from "@/components/embed-code";
 import { createCountdown, updateCountdown, checkSlugAvailability } from "@/lib/actions";
 import type { CountdownWithStyle } from "@/lib/types";
 import { Loader2, Upload } from "lucide-react";
+import { EventDateLookup } from "@/components/event-date-lookup";
 
 const FONT_OPTIONS = [
   "Inter",
@@ -186,6 +187,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 onChange={(e) => setTargetDate(e.target.value)}
                 required
               />
+              <EventDateLookup onApply={(isoDate) => setTargetDate(isoDate.slice(0, 16))} />
             </div>
             <div>
               <Label htmlFor="slug">
