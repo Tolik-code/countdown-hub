@@ -1,7 +1,7 @@
 const knownEvents: { patterns: string[]; month: number; day: number }[] = [
-  { patterns: ["christmas", "xmas", "christmas day"], month: 12, day: 25 },
+  { patterns: ["christmas", "xmas", "christmas day", "різдво"], month: 12, day: 25 },
   {
-    patterns: ["new year", "new years", "new year's eve", "nye"],
+    patterns: ["new year", "new years", "new year's eve", "nye", "новий рік", "новый год"],
     month: 12,
     day: 31,
   },
@@ -10,9 +10,9 @@ const knownEvents: { patterns: string[]; month: number; day: number }[] = [
     month: 1,
     day: 1,
   },
-  { patterns: ["halloween"], month: 10, day: 31 },
+  { patterns: ["halloween", "хелловін", "хэллоуин"], month: 10, day: 31 },
   {
-    patterns: ["valentine", "valentines", "valentine's day", "valentines day"],
+    patterns: ["valentine", "valentines", "valentine's day", "valentines day", "день валентина", "день закоханих"],
     month: 2,
     day: 14,
   },
@@ -26,6 +26,11 @@ const knownEvents: { patterns: string[]; month: number; day: number }[] = [
     ],
     month: 7,
     day: 4,
+  },
+  {
+    patterns: ["день незалежності", "день независимости"],
+    month: 8,
+    day: 24,
   },
   {
     patterns: [
@@ -44,12 +49,12 @@ const knownEvents: { patterns: string[]; month: number; day: number }[] = [
     day: 5,
   },
   {
-    patterns: ["april fools", "april fool's day"],
+    patterns: ["april fools", "april fool's day", "1 квітня", "день сміху", "день дурня"],
     month: 4,
     day: 1,
   },
   {
-    patterns: ["earth day"],
+    patterns: ["earth day", "день землі"],
     month: 4,
     day: 22,
   },
@@ -57,11 +62,6 @@ const knownEvents: { patterns: string[]; month: number; day: number }[] = [
     patterns: ["pi day"],
     month: 3,
     day: 14,
-  },
-  {
-    patterns: ["new year's eve", "nye"],
-    month: 12,
-    day: 31,
   },
 ];
 
