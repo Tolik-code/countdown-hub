@@ -3,6 +3,7 @@ import { CountdownCard } from "@/components/countdown-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { AdBanner } from "@/components/ad-banner";
 
 export default async function DashboardPage() {
   const countdowns = await getCountdownsByUser();
@@ -31,6 +32,9 @@ export default async function DashboardPage() {
         {countdowns.map((countdown) => (
           <CountdownCard key={countdown.id} countdown={countdown} />
         ))}
+      </div>
+      <div className="mt-6">
+        <AdBanner slot="DASHBOARD_BOTTOM" format="horizontal" className="min-h-[90px]" />
       </div>
     </div>
   );

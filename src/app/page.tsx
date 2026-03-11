@@ -3,6 +3,7 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Palette, Share2, Code, Globe, Sparkles } from "lucide-react";
+import { AdBanner } from "@/components/ad-banner";
 
 const features = [
   {
@@ -88,6 +89,11 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Ad Banner */}
+      <div className="mx-auto max-w-4xl px-4 py-4">
+        <AdBanner slot="HOME_TOP" format="horizontal" className="min-h-[90px]" />
+      </div>
 
       {/* CTA */}
       <section className="border-t bg-muted/30 py-16 text-center">

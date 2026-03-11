@@ -21,6 +21,7 @@ import { createCountdown, updateCountdown, checkSlugAvailability } from "@/lib/a
 import type { CountdownWithStyle } from "@/lib/types";
 import { Loader2, Upload } from "lucide-react";
 import { EventDateLookup } from "@/components/event-date-lookup";
+import { ScrollableTabs } from "@/components/scrollable-tabs";
 
 const FONT_OPTIONS = [
   "Inter",
@@ -188,16 +189,18 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         )}
 
         <Tabs defaultValue="basic">
-          <TabsList className="w-full flex-wrap h-auto">
-            <TabsTrigger value="basic">Basic</TabsTrigger>
-            <TabsTrigger value="colors">Colors</TabsTrigger>
-            <TabsTrigger value="typography">Text</TabsTrigger>
-            <TabsTrigger value="background">Background</TabsTrigger>
-            <TabsTrigger value="display">Display</TabsTrigger>
-            <TabsTrigger value="completion">Completion</TabsTrigger>
-            <TabsTrigger value="animation">Animation</TabsTrigger>
-            <TabsTrigger value="advanced">Advanced</TabsTrigger>
-          </TabsList>
+          <ScrollableTabs>
+            <TabsList className="w-max flex-nowrap">
+              <TabsTrigger value="basic" className="shrink-0">Basic</TabsTrigger>
+              <TabsTrigger value="colors" className="shrink-0">Colors</TabsTrigger>
+              <TabsTrigger value="typography" className="shrink-0">Text</TabsTrigger>
+              <TabsTrigger value="background" className="shrink-0">Background</TabsTrigger>
+              <TabsTrigger value="display" className="shrink-0">Display</TabsTrigger>
+              <TabsTrigger value="completion" className="shrink-0">Completion</TabsTrigger>
+              <TabsTrigger value="animation" className="shrink-0">Animation</TabsTrigger>
+              <TabsTrigger value="advanced" className="shrink-0">Advanced</TabsTrigger>
+            </TabsList>
+          </ScrollableTabs>
 
           <TabsContent value="basic" className="space-y-4">
             <div>
@@ -334,7 +337,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Font Family</Label>
               <Select value={fontFamily} onValueChange={setFontFamily}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -349,7 +352,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Font Size</Label>
               <Select value={fontSize} onValueChange={setFontSize}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -363,7 +366,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Font Weight</Label>
               <Select value={fontWeight} onValueChange={setFontWeight}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -377,7 +380,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Text Outline</Label>
               <Select value={textBorder} onValueChange={setTextBorder}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -391,7 +394,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Text Shadow</Label>
               <Select value={textShadow} onValueChange={setTextShadow}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -456,7 +459,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Display Format</Label>
               <Select value={displayFormat} onValueChange={setDisplayFormat}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -526,7 +529,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             <div>
               <Label>Animation Style</Label>
               <Select value={animation} onValueChange={setAnimation}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -623,8 +626,8 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         <h3 className="mb-3 text-sm font-medium text-muted-foreground">
           Live Preview
         </h3>
-        <Card>
-          <CardContent className="p-0 overflow-hidden rounded-lg">
+        <Card className="p-0 gap-0 overflow-hidden">
+          <CardContent className="p-0">
             <CountdownPreview
               title={title}
               targetDate={targetDate}
