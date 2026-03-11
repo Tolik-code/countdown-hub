@@ -205,7 +205,7 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
         )}
 
         {!minimal && (
-          <p className="mt-8 text-sm opacity-50 relative z-10" style={{ color: txtColor }}>
+          <p className="mt-8 text-sm opacity-50 relative z-10" style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}>
             {new Date(countdown.targetDate).toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",

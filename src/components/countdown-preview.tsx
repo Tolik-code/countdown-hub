@@ -201,6 +201,21 @@ export function CountdownPreview({
         {title || "Your Countdown"}
       </h2>
       <div className="flex items-center gap-3 relative z-10">{renderTime()}</div>
+      {targetDate && (
+        <p
+          className="mt-4 text-xs opacity-50 relative z-10"
+          style={{ color: textColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}
+        >
+          {new Date(targetDate).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
+      )}
     </div>
   );
 }
