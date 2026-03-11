@@ -35,6 +35,15 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
   const backgroundImageUrl = (formData.get("backgroundImageUrl") as string) || undefined;
   const displayFormat = (formData.get("displayFormat") as string) || "DHMS";
   const customCss = (formData.get("customCss") as string) || undefined;
+  const fontSize = (formData.get("fontSize") as string) || "md";
+  const fontWeight = (formData.get("fontWeight") as string) || "bold";
+  const textBorder = (formData.get("textBorder") as string) || "none";
+  const textShadow = (formData.get("textShadow") as string) || "none";
+  const completionTitle = (formData.get("completionTitle") as string) || "Time's Up!";
+  const completionBgColor = (formData.get("completionBgColor") as string) || "#000000";
+  const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
+  const animation = (formData.get("animation") as string) || "none";
+  const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
 
   const titleErr = validateTitle(title);
   if (titleErr) return { success: false, error: titleErr };
@@ -74,6 +83,15 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
           backgroundImageUrl,
           displayFormat: displayFormat as DisplayFormat,
           customCss,
+          fontSize,
+          fontWeight,
+          textBorder,
+          textShadow,
+          completionTitle,
+          completionBgColor,
+          completionTextColor,
+          animation,
+          animationImageUrl,
         },
       },
     },
@@ -104,6 +122,15 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
   const backgroundImageUrl = (formData.get("backgroundImageUrl") as string) || undefined;
   const displayFormat = (formData.get("displayFormat") as string) || "DHMS";
   const customCss = (formData.get("customCss") as string) || undefined;
+  const fontSize = (formData.get("fontSize") as string) || "md";
+  const fontWeight = (formData.get("fontWeight") as string) || "bold";
+  const textBorder = (formData.get("textBorder") as string) || "none";
+  const textShadow = (formData.get("textShadow") as string) || "none";
+  const completionTitle = (formData.get("completionTitle") as string) || "Time's Up!";
+  const completionBgColor = (formData.get("completionBgColor") as string) || "#000000";
+  const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
+  const animation = (formData.get("animation") as string) || "none";
+  const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
 
   const titleErr = validateTitle(title);
   if (titleErr) return { success: false, error: titleErr };
@@ -127,6 +154,25 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
     if (cssErr) return { success: false, error: cssErr };
   }
 
+  const styleData = {
+    backgroundColor,
+    textColor,
+    accentColor,
+    fontFamily,
+    backgroundImageUrl,
+    displayFormat: displayFormat as DisplayFormat,
+    customCss,
+    fontSize,
+    fontWeight,
+    textBorder,
+    textShadow,
+    completionTitle,
+    completionBgColor,
+    completionTextColor,
+    animation,
+    animationImageUrl,
+  };
+
   await prisma.countdown.update({
     where: { id },
     data: {
@@ -136,24 +182,8 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
       targetDate: new Date(targetDate),
       style: {
         upsert: {
-          create: {
-            backgroundColor,
-            textColor,
-            accentColor,
-            fontFamily,
-            backgroundImageUrl,
-            displayFormat: displayFormat as DisplayFormat,
-            customCss,
-          },
-          update: {
-            backgroundColor,
-            textColor,
-            accentColor,
-            fontFamily,
-            backgroundImageUrl,
-            displayFormat: displayFormat as DisplayFormat,
-            customCss,
-          },
+          create: styleData,
+          update: styleData,
         },
       },
     },

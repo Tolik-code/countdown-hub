@@ -71,7 +71,35 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
   const [customCss, setCustomCss] = useState(
     countdown?.style?.customCss ?? ""
   );
+  const [fontSize, setFontSize] = useState(
+    countdown?.style?.fontSize ?? "md"
+  );
+  const [fontWeight, setFontWeight] = useState(
+    countdown?.style?.fontWeight ?? "bold"
+  );
+  const [textBorder, setTextBorder] = useState(
+    countdown?.style?.textBorder ?? "none"
+  );
+  const [textShadow, setTextShadow] = useState(
+    countdown?.style?.textShadow ?? "none"
+  );
+  const [completionTitle, setCompletionTitle] = useState(
+    countdown?.style?.completionTitle ?? "Time's Up!"
+  );
+  const [completionBgColor, setCompletionBgColor] = useState(
+    countdown?.style?.completionBgColor ?? "#000000"
+  );
+  const [completionTextColor, setCompletionTextColor] = useState(
+    countdown?.style?.completionTextColor ?? "#ffffff"
+  );
+  const [animation, setAnimation] = useState(
+    countdown?.style?.animation ?? "none"
+  );
+  const [animationImageUrl, setAnimationImageUrl] = useState(
+    countdown?.style?.animationImageUrl ?? ""
+  );
   const [uploading, setUploading] = useState(false);
+  const [uploadingAnim, setUploadingAnim] = useState(false);
 
   const checkSlug = useCallback(
     (value: string) => {
@@ -95,24 +123,26 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
     checkSlug(cleaned);
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: "bg" | "anim") => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading(true);
+    const setLoading = target === "bg" ? setUploading : setUploadingAnim;
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const data = await res.json();
       if (data.url) {
-        setBackgroundImageUrl(data.url);
+        if (target === "bg") setBackgroundImageUrl(data.url);
+        else setAnimationImageUrl(data.url);
       } else {
         setError(data.error || "Upload failed");
       }
     } catch {
       setError("Upload failed");
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
@@ -138,6 +168,15 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         <input type="hidden" name="backgroundImageUrl" value={backgroundImageUrl} />
         <input type="hidden" name="displayFormat" value={displayFormat} />
         <input type="hidden" name="fontFamily" value={fontFamily} />
+        <input type="hidden" name="fontSize" value={fontSize} />
+        <input type="hidden" name="fontWeight" value={fontWeight} />
+        <input type="hidden" name="textBorder" value={textBorder} />
+        <input type="hidden" name="textShadow" value={textShadow} />
+        <input type="hidden" name="completionTitle" value={completionTitle} />
+        <input type="hidden" name="completionBgColor" value={completionBgColor} />
+        <input type="hidden" name="completionTextColor" value={completionTextColor} />
+        <input type="hidden" name="animation" value={animation} />
+        <input type="hidden" name="animationImageUrl" value={animationImageUrl} />
 
         {error && (
           <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
@@ -146,12 +185,14 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         )}
 
         <Tabs defaultValue="basic">
-          <TabsList className="w-full">
+          <TabsList className="w-full flex-wrap h-auto">
             <TabsTrigger value="basic">Basic</TabsTrigger>
             <TabsTrigger value="colors">Colors</TabsTrigger>
-            <TabsTrigger value="typography">Font</TabsTrigger>
+            <TabsTrigger value="typography">Text</TabsTrigger>
             <TabsTrigger value="background">Background</TabsTrigger>
             <TabsTrigger value="display">Display</TabsTrigger>
+            <TabsTrigger value="completion">Completion</TabsTrigger>
+            <TabsTrigger value="animation">Animation</TabsTrigger>
             <TabsTrigger value="advanced">Advanced</TabsTrigger>
           </TabsList>
 
@@ -289,6 +330,63 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <Label>Font Size</Label>
+              <Select value={fontSize} onValueChange={setFontSize}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
+                  <SelectItem value="xl">Extra Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Font Weight</Label>
+              <Select value={fontWeight} onValueChange={setFontWeight}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="bold">Bold</SelectItem>
+                  <SelectItem value="black">Black</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Text Outline</Label>
+              <Select value={textBorder} onValueChange={setTextBorder}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="thin">Thin Dark</SelectItem>
+                  <SelectItem value="thick">Thick Dark</SelectItem>
+                  <SelectItem value="white">White Outline</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Text Shadow</Label>
+              <Select value={textShadow} onValueChange={setTextShadow}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
+                  <SelectItem value="glow">Glow</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </TabsContent>
 
           <TabsContent value="background" className="space-y-4">
@@ -309,7 +407,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
-                    onChange={handleUpload}
+                    onChange={(e) => handleUpload(e, "bg")}
                     className="hidden"
                     disabled={uploading}
                   />
@@ -356,6 +454,121 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
                 </SelectContent>
               </Select>
             </div>
+          </TabsContent>
+
+          <TabsContent value="completion" className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Customize what visitors see when the countdown reaches zero.
+            </p>
+            <div>
+              <Label htmlFor="completionTitle">Completion Message</Label>
+              <Input
+                id="completionTitle"
+                value={completionTitle}
+                onChange={(e) => setCompletionTitle(e.target.value)}
+                placeholder="Time's Up!"
+              />
+            </div>
+            <div>
+              <Label>Background Color</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={completionBgColor}
+                  onChange={(e) => setCompletionBgColor(e.target.value)}
+                  className="h-10 w-14 cursor-pointer p-1"
+                />
+                <Input
+                  value={completionBgColor}
+                  onChange={(e) => setCompletionBgColor(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Text Color</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={completionTextColor}
+                  onChange={(e) => setCompletionTextColor(e.target.value)}
+                  className="h-10 w-14 cursor-pointer p-1"
+                />
+                <Input
+                  value={completionTextColor}
+                  onChange={(e) => setCompletionTextColor(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="animation" className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Add falling particle animations to your countdown page.
+            </p>
+            <div>
+              <Label>Animation Style</Label>
+              <Select value={animation} onValueChange={setAnimation}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="confetti">Confetti 🎊</SelectItem>
+                  <SelectItem value="snow">Snow ❄️</SelectItem>
+                  <SelectItem value="hearts">Hearts ❤️</SelectItem>
+                  <SelectItem value="stars">Stars ⭐</SelectItem>
+                  <SelectItem value="leaves">Leaves 🍂</SelectItem>
+                  <SelectItem value="rain">Rain 💧</SelectItem>
+                  <SelectItem value="custom">Custom Image</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {animation === "custom" && (
+              <div>
+                <Label>Custom Particle Image</Label>
+                <div className="mt-2">
+                  <label className="flex cursor-pointer items-center gap-2 rounded-md border border-dashed p-4 hover:bg-muted/50">
+                    {uploadingAnim ? (
+                      <Loader2 className="size-5 animate-spin" />
+                    ) : (
+                      <Upload className="size-5" />
+                    )}
+                    <span className="text-sm">
+                      {uploadingAnim
+                        ? "Uploading..."
+                        : "Upload PNG image for falling particles"}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={(e) => handleUpload(e, "anim")}
+                      className="hidden"
+                      disabled={uploadingAnim}
+                    />
+                  </label>
+                </div>
+                {animationImageUrl && (
+                  <div className="mt-2 flex items-center gap-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={animationImageUrl}
+                      alt="Particle preview"
+                      className="h-10 w-10 rounded object-contain"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setAnimationImageUrl("")}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="advanced" className="space-y-4">
@@ -406,6 +619,15 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               backgroundImageUrl={backgroundImageUrl || undefined}
               displayFormat={displayFormat}
               customCss={customCss || undefined}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              textBorder={textBorder}
+              textShadow={textShadow}
+              completionTitle={completionTitle}
+              completionBgColor={completionBgColor}
+              completionTextColor={completionTextColor}
+              animation={animation}
+              animationImageUrl={animationImageUrl || undefined}
             />
           </CardContent>
         </Card>

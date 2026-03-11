@@ -44,6 +44,22 @@ model CountdownStyle {
   backgroundImageUrl String?
   displayFormat      DisplayFormat @default(DHMS)
   customCss          String?
+
+  // Text styling
+  fontSize           String        @default("md")
+  fontWeight         String        @default("bold")
+  textBorder         String        @default("none")
+  textShadow         String        @default("none")
+
+  // Completion page
+  completionTitle    String        @default("Time's Up!")
+  completionBgColor  String        @default("#000000")
+  completionTextColor String       @default("#ffffff")
+
+  // Animation
+  animation          String        @default("none")
+  animationImageUrl  String?
+
   countdownId        String        @unique
   countdown          Countdown     @relation(fields: [countdownId], references: [id], onDelete: Cascade)
 }

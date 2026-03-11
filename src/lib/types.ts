@@ -16,6 +16,15 @@ export interface CreateCountdownInput {
   backgroundImageUrl?: string;
   displayFormat?: string;
   customCss?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  textBorder?: string;
+  textShadow?: string;
+  completionTitle?: string;
+  completionBgColor?: string;
+  completionTextColor?: string;
+  animation?: string;
+  animationImageUrl?: string;
 }
 
 export interface UpdateCountdownInput extends CreateCountdownInput {

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { deleteCountdown, toggleCountdownStatus } from "@/lib/actions";
 import type { CountdownWithStyle } from "@/lib/types";
-import { Pencil, Trash2, Pause, Play } from "lucide-react";
+import { Pencil, Trash2, Pause, Play, ExternalLink } from "lucide-react";
 
 interface CountdownCardProps {
   countdown: CountdownWithStyle;
@@ -60,6 +60,12 @@ export function CountdownCard({ countdown }: CountdownCardProps) {
           /{countdown.slug}
         </p>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={`/${countdown.slug}`} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="size-3.5" />
+              View
+            </a>
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href={`/dashboard/${countdown.id}/edit`}>
               <Pencil className="size-3.5" />

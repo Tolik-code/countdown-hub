@@ -33,9 +33,9 @@ export function EmbedCode({ slug }: EmbedCodeProps) {
           </pre>
           <Button
             type="button"
-            variant="ghost"
+            variant="secondary"
             size="icon-xs"
-            className="absolute right-2 top-2"
+            className="absolute right-2 top-2 bg-background border shadow-sm"
             onClick={handleCopy}
           >
             {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
