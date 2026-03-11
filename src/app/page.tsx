@@ -63,7 +63,7 @@ export default async function Home() {
           Create beautiful, customizable countdown timer pages. Share them with a
           link or embed them on your website. Fully free.
         </p>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3 justify-center">
           {userId ? (
             <Button asChild size="lg">
               <Link href="/dashboard">Go to Dashboard</Link>
@@ -78,6 +78,9 @@ export default async function Home() {
               </Button>
             </>
           )}
+          <Button asChild variant="outline" size="lg">
+            <Link href="/explore">Explore Countdowns</Link>
+          </Button>
         </div>
       </section>
 

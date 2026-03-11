@@ -65,6 +65,20 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
   const compText = style?.completionTextColor ?? "#ffffff";
   const anim = style?.animation ?? "none";
   const animImg = style?.animationImageUrl;
+  const abText = style?.actionButtonText;
+  const abUrl = style?.actionButtonUrl;
+  const abBgColor = style?.actionButtonBgColor ?? "#3b82f6";
+  const abTextColor = style?.actionButtonTextColor ?? "#ffffff";
+  const abRadius = style?.actionButtonRadius ?? "md";
+  const abHoverColor = style?.actionButtonHoverColor;
+
+  const ACTION_RADIUS_MAP: Record<string, string> = {
+    none: "0",
+    sm: "0.25rem",
+    md: "0.5rem",
+    lg: "1rem",
+    full: "9999px",
+  };
 
   const sizes = FONT_SIZE_MAP[fSize] || FONT_SIZE_MAP.md;
   const fontWeightValue = fWeight === "normal" ? 400 : fWeight === "bold" ? 700 : fWeight === "black" ? 900 : 300;
@@ -207,6 +221,17 @@ export function CountdownDisplay({ countdown, minimal = false }: CountdownDispla
           </div>
         )}
 
+        {abText && abUrl && (
+          <ActionButton
+            text={abText}
+            url={abUrl}
+            bgColor={abBgColor}
+            textColor={abTextColor}
+            radius={ACTION_RADIUS_MAP[abRadius] ?? "0.5rem"}
+            hoverColor={abHoverColor ?? undefined}
+          />
+        )}
+
         {!minimal && (
           <p className="mt-4 sm:mt-8 text-xs sm:text-sm opacity-50 relative z-10 px-2 text-center" style={{ color: txtColor, textShadow: combinedShadow, fontWeight: fontWeightValue }}>
             {new Date(countdown.targetDate).toLocaleDateString("en-US", {
@@ -266,6 +291,44 @@ function Colon({ accent }: { accent: string; sizeNum: string }) {
     >
       :
     </span>
+  );
+}
+
+function ActionButton({
+  text,
+  url,
+  bgColor,
+  textColor,
+  radius,
+  hoverColor,
+}: {
+  text: string;
+  url: string;
+  bgColor: string;
+  textColor: string;
+  radius: string;
+  hoverColor?: string;
+}) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-4 sm:mt-6 inline-block px-8 py-3 text-base sm:text-lg font-medium transition-colors relative z-10"
+      style={{
+        backgroundColor: bgColor,
+        color: textColor,
+        borderRadius: radius,
+      }}
+      onMouseEnter={(e) =>
+        hoverColor && (e.currentTarget.style.backgroundColor = hoverColor)
+      }
+      onMouseLeave={(e) =>
+        hoverColor && (e.currentTarget.style.backgroundColor = bgColor)
+      }
+    >
+      {text}
+    </a>
   );
 }
 

@@ -45,6 +45,12 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
   const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
   const animation = (formData.get("animation") as string) || "none";
   const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
+  const actionButtonText = (formData.get("actionButtonText") as string) || undefined;
+  const actionButtonUrl = (formData.get("actionButtonUrl") as string) || undefined;
+  const actionButtonBgColor = (formData.get("actionButtonBgColor") as string) || "#3b82f6";
+  const actionButtonTextColor = (formData.get("actionButtonTextColor") as string) || "#ffffff";
+  const actionButtonRadius = (formData.get("actionButtonRadius") as string) || "md";
+  const actionButtonHoverColor = (formData.get("actionButtonHoverColor") as string) || undefined;
 
   const titleErr = validateTitle(title);
   if (titleErr) return { success: false, error: titleErr };
@@ -94,6 +100,12 @@ export async function createCountdown(formData: FormData): Promise<ActionResult>
           completionTextColor,
           animation,
           animationImageUrl,
+          actionButtonText,
+          actionButtonUrl,
+          actionButtonBgColor,
+          actionButtonTextColor,
+          actionButtonRadius,
+          actionButtonHoverColor,
         },
       },
     },
@@ -134,6 +146,12 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
   const completionTextColor = (formData.get("completionTextColor") as string) || "#ffffff";
   const animation = (formData.get("animation") as string) || "none";
   const animationImageUrl = (formData.get("animationImageUrl") as string) || undefined;
+  const actionButtonText = (formData.get("actionButtonText") as string) || undefined;
+  const actionButtonUrl = (formData.get("actionButtonUrl") as string) || undefined;
+  const actionButtonBgColor = (formData.get("actionButtonBgColor") as string) || "#3b82f6";
+  const actionButtonTextColor = (formData.get("actionButtonTextColor") as string) || "#ffffff";
+  const actionButtonRadius = (formData.get("actionButtonRadius") as string) || "md";
+  const actionButtonHoverColor = (formData.get("actionButtonHoverColor") as string) || undefined;
 
   const titleErr = validateTitle(title);
   if (titleErr) return { success: false, error: titleErr };
@@ -174,6 +192,12 @@ export async function updateCountdown(formData: FormData): Promise<ActionResult>
     completionTextColor,
     animation,
     animationImageUrl,
+    actionButtonText,
+    actionButtonUrl,
+    actionButtonBgColor,
+    actionButtonTextColor,
+    actionButtonRadius,
+    actionButtonHoverColor,
   };
 
   await prisma.countdown.update({
@@ -280,4 +304,28 @@ export async function checkSlugAvailability(
   const slugErr = validateSlug(slug);
   if (slugErr) return false;
   return slugAvailable(slug, excludeId);
+}
+
+export async function getAllPublicCountdowns(search?: string): Promise<CountdownWithStyle[]> {
+  const where: Record<string, unknown> = { status: "ACTIVE" };
+  if (search && search.trim()) {
+    const term = search.trim();
+    where.OR = [
+      { title: { contains: term, mode: "insensitive" } },
+      { slug: { contains: term, mode: "insensitive" } },
+    ];
+  }
+  return prisma.countdown.findMany({
+    where,
+    include: { style: true },
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+}
+
+export async function getCountdownPublicById(id: string): Promise<CountdownWithStyle | null> {
+  return prisma.countdown.findUnique({
+    where: { id, status: "ACTIVE" },
+    include: { style: true },
+  });
 }

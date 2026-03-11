@@ -14,6 +14,9 @@ export async function Header() {
           <span className="hidden sm:inline">CountdownHub</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/explore">Explore</Link>
+          </Button>
           {userId ? (
             <Button asChild variant="default" size="sm">
               <Link href="/dashboard">Dashboard</Link>

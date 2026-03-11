@@ -34,73 +34,96 @@ const FONT_OPTIONS = [
 
 interface CountdownFormProps {
   countdown?: CountdownWithStyle;
+  template?: CountdownWithStyle;
 }
 
-export function CountdownForm({ countdown }: CountdownFormProps) {
+export function CountdownForm({ countdown, template }: CountdownFormProps) {
+  // When creating from template, use template values (but not slug/seoKeywords)
+  const src = countdown ?? template;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const slugTimeout = useRef<ReturnType<typeof setTimeout>>(null);
 
-  const [title, setTitle] = useState(countdown?.title ?? "");
-  const [description, setDescription] = useState(countdown?.description ?? "");
+  const [title, setTitle] = useState(
+    template ? `Copy of ${template.title}` : (countdown?.title ?? "")
+  );
+  const [description, setDescription] = useState(src?.description ?? "");
   const [slug, setSlug] = useState(countdown?.slug ?? "");
   const [targetDate, setTargetDate] = useState(
-    countdown?.targetDate
-      ? new Date(countdown.targetDate).toISOString().slice(0, 16)
+    src?.targetDate
+      ? new Date(src.targetDate).toISOString().slice(0, 16)
       : ""
   );
   const [backgroundColor, setBackgroundColor] = useState(
-    countdown?.style?.backgroundColor ?? "#ffffff"
+    src?.style?.backgroundColor ?? "#ffffff"
   );
   const [textColor, setTextColor] = useState(
-    countdown?.style?.textColor ?? "#000000"
+    src?.style?.textColor ?? "#000000"
   );
   const [accentColor, setAccentColor] = useState(
-    countdown?.style?.accentColor ?? "#3b82f6"
+    src?.style?.accentColor ?? "#3b82f6"
   );
   const [fontFamily, setFontFamily] = useState(
-    countdown?.style?.fontFamily ?? "Inter"
+    src?.style?.fontFamily ?? "Inter"
   );
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(
-    countdown?.style?.backgroundImageUrl ?? ""
+    src?.style?.backgroundImageUrl ?? ""
   );
   const [displayFormat, setDisplayFormat] = useState(
-    (countdown?.style?.displayFormat ?? "DHMS") as string
+    (src?.style?.displayFormat ?? "DHMS") as string
   );
   const [customCss, setCustomCss] = useState(
-    countdown?.style?.customCss ?? ""
+    src?.style?.customCss ?? ""
   );
   const [fontSize, setFontSize] = useState(
-    countdown?.style?.fontSize ?? "md"
+    src?.style?.fontSize ?? "md"
   );
   const [fontWeight, setFontWeight] = useState(
-    countdown?.style?.fontWeight ?? "bold"
+    src?.style?.fontWeight ?? "bold"
   );
   const [textBorder, setTextBorder] = useState(
-    countdown?.style?.textBorder ?? "none"
+    src?.style?.textBorder ?? "none"
   );
   const [textShadow, setTextShadow] = useState(
-    countdown?.style?.textShadow ?? "none"
+    src?.style?.textShadow ?? "none"
   );
   const [completionTitle, setCompletionTitle] = useState(
-    countdown?.style?.completionTitle ?? "Time's Up!"
+    src?.style?.completionTitle ?? "Time's Up!"
   );
   const [completionBgColor, setCompletionBgColor] = useState(
-    countdown?.style?.completionBgColor ?? "#000000"
+    src?.style?.completionBgColor ?? "#000000"
   );
   const [completionTextColor, setCompletionTextColor] = useState(
-    countdown?.style?.completionTextColor ?? "#ffffff"
+    src?.style?.completionTextColor ?? "#ffffff"
   );
   const [animation, setAnimation] = useState(
-    countdown?.style?.animation ?? "none"
+    src?.style?.animation ?? "none"
   );
   const [animationImageUrl, setAnimationImageUrl] = useState(
-    countdown?.style?.animationImageUrl ?? ""
+    src?.style?.animationImageUrl ?? ""
   );
   const [seoKeywords, setSeoKeywords] = useState(
     countdown?.seoKeywords ?? ""
+  );
+  const [actionButtonText, setActionButtonText] = useState(
+    src?.style?.actionButtonText ?? ""
+  );
+  const [actionButtonUrl, setActionButtonUrl] = useState(
+    src?.style?.actionButtonUrl ?? ""
+  );
+  const [actionButtonBgColor, setActionButtonBgColor] = useState(
+    src?.style?.actionButtonBgColor ?? "#3b82f6"
+  );
+  const [actionButtonTextColor, setActionButtonTextColor] = useState(
+    src?.style?.actionButtonTextColor ?? "#ffffff"
+  );
+  const [actionButtonRadius, setActionButtonRadius] = useState(
+    src?.style?.actionButtonRadius ?? "md"
+  );
+  const [actionButtonHoverColor, setActionButtonHoverColor] = useState(
+    src?.style?.actionButtonHoverColor ?? ""
   );
   const [uploading, setUploading] = useState(false);
   const [uploadingAnim, setUploadingAnim] = useState(false);
@@ -191,6 +214,12 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
         <input type="hidden" name="animation" value={animation} />
         <input type="hidden" name="animationImageUrl" value={animationImageUrl} />
         <input type="hidden" name="customCss" value={customCss} />
+        <input type="hidden" name="actionButtonText" value={actionButtonText} />
+        <input type="hidden" name="actionButtonUrl" value={actionButtonUrl} />
+        <input type="hidden" name="actionButtonBgColor" value={actionButtonBgColor} />
+        <input type="hidden" name="actionButtonTextColor" value={actionButtonTextColor} />
+        <input type="hidden" name="actionButtonRadius" value={actionButtonRadius} />
+        <input type="hidden" name="actionButtonHoverColor" value={actionButtonHoverColor} />
 
         {error && (
           <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
@@ -207,6 +236,7 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               <TabsTrigger value="background" className="shrink-0">Background</TabsTrigger>
               <TabsTrigger value="display" className="shrink-0">Display</TabsTrigger>
               <TabsTrigger value="completion" className="shrink-0">Completion</TabsTrigger>
+              <TabsTrigger value="action-button" className="shrink-0">Action Button</TabsTrigger>
               <TabsTrigger value="animation" className="shrink-0">Animation</TabsTrigger>
               <TabsTrigger value="advanced" className="shrink-0">Advanced</TabsTrigger>
             </TabsList>
@@ -524,6 +554,94 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
             </div>
           </TabsContent>
 
+          <TabsContent value="action-button" className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Add a call-to-action button below your countdown timer. Leave text empty to hide the button.
+            </p>
+            <div>
+              <Label htmlFor="actionButtonText">Button Text</Label>
+              <Input
+                id="actionButtonText"
+                value={actionButtonText}
+                onChange={(e) => setActionButtonText(e.target.value)}
+                placeholder="e.g. Get Tickets, Learn More"
+              />
+            </div>
+            <div>
+              <Label htmlFor="actionButtonUrl">Button URL</Label>
+              <Input
+                id="actionButtonUrl"
+                value={actionButtonUrl}
+                onChange={(e) => setActionButtonUrl(e.target.value)}
+                placeholder="https://example.com"
+              />
+            </div>
+            <div>
+              <Label>Background Color</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={actionButtonBgColor}
+                  onChange={(e) => setActionButtonBgColor(e.target.value)}
+                  className="h-10 w-14 cursor-pointer p-1"
+                />
+                <Input
+                  value={actionButtonBgColor}
+                  onChange={(e) => setActionButtonBgColor(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Text Color</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={actionButtonTextColor}
+                  onChange={(e) => setActionButtonTextColor(e.target.value)}
+                  className="h-10 w-14 cursor-pointer p-1"
+                />
+                <Input
+                  value={actionButtonTextColor}
+                  onChange={(e) => setActionButtonTextColor(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Border Radius</Label>
+              <Select value={actionButtonRadius} onValueChange={setActionButtonRadius}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
+                  <SelectItem value="full">Full (Pill)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Hover Color (optional)</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={actionButtonHoverColor || "#2563eb"}
+                  onChange={(e) => setActionButtonHoverColor(e.target.value)}
+                  className="h-10 w-14 cursor-pointer p-1"
+                />
+                <Input
+                  value={actionButtonHoverColor}
+                  onChange={(e) => setActionButtonHoverColor(e.target.value)}
+                  placeholder="Leave empty for no hover effect"
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          </TabsContent>
+
           <TabsContent value="animation" className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Add falling particle animations to your countdown page.
@@ -648,6 +766,12 @@ export function CountdownForm({ countdown }: CountdownFormProps) {
               completionTextColor={completionTextColor}
               animation={animation}
               animationImageUrl={animationImageUrl || undefined}
+              actionButtonText={actionButtonText || undefined}
+              actionButtonUrl={actionButtonUrl || undefined}
+              actionButtonBgColor={actionButtonBgColor}
+              actionButtonTextColor={actionButtonTextColor}
+              actionButtonRadius={actionButtonRadius}
+              actionButtonHoverColor={actionButtonHoverColor || undefined}
             />
           </CardContent>
         </Card>

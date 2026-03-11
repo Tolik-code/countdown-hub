@@ -25,6 +25,12 @@ export interface CreateCountdownInput {
   completionTextColor?: string;
   animation?: string;
   animationImageUrl?: string;
+  actionButtonText?: string;
+  actionButtonUrl?: string;
+  actionButtonBgColor?: string;
+  actionButtonTextColor?: string;
+  actionButtonRadius?: string;
+  actionButtonHoverColor?: string;
 }
 
 export interface UpdateCountdownInput extends CreateCountdownInput {

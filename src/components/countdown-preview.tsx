@@ -23,7 +23,21 @@ interface CountdownPreviewProps {
   completionTextColor?: string;
   animation?: string;
   animationImageUrl?: string;
+  actionButtonText?: string;
+  actionButtonUrl?: string;
+  actionButtonBgColor?: string;
+  actionButtonTextColor?: string;
+  actionButtonRadius?: string;
+  actionButtonHoverColor?: string;
 }
+
+const ACTION_RADIUS_MAP: Record<string, string> = {
+  none: "0",
+  sm: "0.25rem",
+  md: "0.5rem",
+  lg: "1rem",
+  full: "9999px",
+};
 
 const FONT_SIZE_MAP: Record<string, string> = {
   sm: "text-xl",
@@ -87,6 +101,12 @@ export function CountdownPreview({
   completionTextColor = "#ffffff",
   animation = "none",
   animationImageUrl,
+  actionButtonText,
+  actionButtonUrl,
+  actionButtonBgColor = "#3b82f6",
+  actionButtonTextColor = "#ffffff",
+  actionButtonRadius = "md",
+  actionButtonHoverColor,
 }: CountdownPreviewProps) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(targetDate));
 
@@ -202,6 +222,29 @@ export function CountdownPreview({
         {title || "Your Countdown"}
       </h2>
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 relative z-10">{renderTime()}</div>
+      {actionButtonText && actionButtonUrl && (
+        <a
+          href={actionButtonUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-block px-6 py-2 text-sm font-medium transition-colors relative z-10"
+          style={{
+            backgroundColor: actionButtonBgColor,
+            color: actionButtonTextColor,
+            borderRadius: ACTION_RADIUS_MAP[actionButtonRadius] ?? "0.5rem",
+          }}
+          onMouseEnter={(e) =>
+            actionButtonHoverColor &&
+            (e.currentTarget.style.backgroundColor = actionButtonHoverColor)
+          }
+          onMouseLeave={(e) =>
+            actionButtonHoverColor &&
+            (e.currentTarget.style.backgroundColor = actionButtonBgColor)
+          }
+        >
+          {actionButtonText}
+        </a>
+      )}
       {targetDate && (
         <p
           className="mt-3 sm:mt-4 text-[10px] sm:text-xs opacity-50 relative z-10 text-center"
