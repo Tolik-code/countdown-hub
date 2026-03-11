@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CountdownStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum DisplayFormat {
+  DHMS
+  HMS
+  FULL
+}
+
+model Countdown {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  title       String
+  description String?
+  targetDate  DateTime
+  status      CountdownStatus @default(ACTIVE)
+  userId      String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  style       CountdownStyle?
+
+  @@index([userId])
+  @@index([slug])
+}
+
+model CountdownStyle {
+  id                 String        @id @default(cuid())
+  backgroundColor    String        @default("#ffffff")
+  textColor          String        @default("#000000")
+  accentColor        String        @default("#3b82f6")
+  fontFamily         String        @default("Inter")
+  backgroundImageUrl String?
+  displayFormat      DisplayFormat @default(DHMS)
+  customCss          String?
+  countdownId        String        @unique
+  countdown          Countdown     @relation(fields: [countdownId], references: [id], onDelete: Cascade)
+}
