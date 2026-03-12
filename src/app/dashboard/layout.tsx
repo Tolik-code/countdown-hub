@@ -19,12 +19,12 @@ export default async function DashboardLayout({
           <Link href="/dashboard" className="text-lg sm:text-xl font-bold">
             CountdownHub
           </Link>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-3">
             <LanguageSwitcher />
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link href="/explore">{t(d, "common.explore")}</Link>
             </Button>
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="px-2 sm:px-3">
               <Link href="/dashboard/new">
                 <Plus className="size-4" />
                 <span className="hidden sm:inline">{t(d, "common.newCountdown")}</span>
