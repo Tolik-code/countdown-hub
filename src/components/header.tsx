@@ -16,22 +16,22 @@ export async function Header() {
           <Image src="/logo.png" alt="CountdownHub" width={36} height={36} className="rounded-lg" />
           <span className="hidden sm:inline">CountdownHub</span>
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-4">
+        <nav className="flex items-center gap-1 sm:gap-3 shrink-0">
           <LanguageSwitcher />
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="px-2 sm:px-3">
             <Link href="/explore">{t(d, "common.explore")}</Link>
           </Button>
           {userId ? (
-            <Button asChild variant="default" size="sm">
+            <Button asChild variant="default" size="sm" className="px-2 sm:px-3">
               <Link href="/dashboard">{t(d, "common.dashboard")}</Link>
             </Button>
           ) : (
             <>
-              <Button asChild variant="ghost" size="sm">
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
                 <Link href="/sign-in">{t(d, "common.signIn")}</Link>
               </Button>
-              <Button asChild size="sm">
-                <Link href="/sign-up">{t(d, "common.getStarted")}</Link>
+              <Button asChild size="sm" className="px-2 sm:px-3">
+                <Link href="/sign-up">{t(d, "common.signUp")}</Link>
               </Button>
             </>
           )}
