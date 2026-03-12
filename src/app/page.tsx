@@ -77,7 +77,7 @@ export default async function Home() {
 
       {/* Ad Banner */}
       <div className="mx-auto max-w-4xl px-4 py-4">
-        <AdBanner slot="HOME_TOP" format="horizontal" className="min-h-[90px]" />
+        <AdBanner variant="horizontal" className="min-h-[90px]" />
       </div>
 
       {/* CTA */}

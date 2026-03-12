@@ -36,7 +36,7 @@ export default async function DashboardPage() {
         ))}
       </div>
       <div className="mt-6">
-        <AdBanner slot="DASHBOARD_BOTTOM" format="horizontal" className="min-h-[90px]" />
+        <AdBanner variant="horizontal" className="min-h-[90px]" />
       </div>
     </div>
   );

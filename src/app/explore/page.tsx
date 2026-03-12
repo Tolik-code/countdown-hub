@@ -1,6 +1,7 @@
 import { getAllPublicCountdowns } from "@/lib/actions";
 import { Header } from "@/components/header";
 import { ExploreCard } from "@/components/explore-card";
+import { AdBanner } from "@/components/ad-banner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -58,6 +59,10 @@ export default async function ExplorePage({
             ))}
           </div>
         )}
+
+        <div className="mt-6">
+          <AdBanner variant="horizontal" className="min-h-[90px]" />
+        </div>
       </div>
     </div>
   );
