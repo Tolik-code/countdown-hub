@@ -80,6 +80,10 @@ export default async function RootLayout({
               strategy="afterInteractive"
             />
           )}
+          <Script
+            src="https://pl28902764.effectivegatecpm.com/d8/c0/9a/d8c09a2f2f645f6c23ad3b32915cb19c.js"
+            strategy="afterInteractive"
+          />
         </body>
       </html>
     </ClerkProvider>

@@ -33,7 +33,7 @@ export function ExploreCard({ countdown }: ExploreCardProps) {
 
   return (
     <Card>
-      <CardContent className="pt-4">
+      <CardContent className="px-4 py-4">
         <h3 className="mb-1 font-semibold truncate">{countdown.title}</h3>
         <p className="mb-1 text-xs text-muted-foreground font-mono">/{countdown.slug}</p>
         <p className="mb-3 text-sm text-muted-foreground">
