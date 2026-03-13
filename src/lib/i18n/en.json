@@ -77,6 +77,10 @@
   },
   "dashboard": {
     "myCountdowns": "My Countdowns",
+    "drafts": "Drafts",
+    "draft": "Draft",
+    "lastEdited": "Last edited",
+    "continueDraft": "Continue",
     "noCountdownsTitle": "No countdowns yet",
     "noCountdownsDescription": "Create your first countdown timer to get started."
   },

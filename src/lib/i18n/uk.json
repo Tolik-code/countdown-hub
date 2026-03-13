@@ -78,6 +78,10 @@
   },
   "dashboard": {
     "myCountdowns": "Мої відліки",
+    "drafts": "Чернетки",
+    "draft": "Чернетка",
+    "lastEdited": "Останнє редагування",
+    "continueDraft": "Продовжити",
     "noCountdownsTitle": "Відліків ще немає",
     "noCountdownsDescription": "Створіть свій перший таймер відліку, щоб почати."
   },

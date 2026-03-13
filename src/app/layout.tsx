@@ -80,17 +80,6 @@ export default async function RootLayout({
               strategy="afterInteractive"
             />
           )}
-          {/* Adsterra popunder — disabled, using banners instead
-          <Script
-            src="https://pl28902764.effectivegatecpm.com/d8/c0/9a/d8c09a2f2f645f6c23ad3b32915cb19c.js"
-            strategy="afterInteractive"
-          />
-          */}
-          {/* Adsterra anti-adblock */}
-          <Script
-            src="https://drainalmost.com/d8/c0/9a/d8c09a2f2f645f6c23ad3b32915cb19c.js"
-            strategy="afterInteractive"
-          />
         </body>
       </html>
     </ClerkProvider>

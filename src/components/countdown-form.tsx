@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState, useCallback, useRef } from "react";
+import { useTransition, useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,6 +132,89 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadingAnim, setUploadingAnim] = useState(false);
 
+  const draftKey = countdown
+    ? `countdown-draft-edit-${countdown.id}`
+    : "countdown-draft-new";
+
+  // Load draft from localStorage on mount (only for new countdowns without template)
+  const draftLoaded = useRef(false);
+  useEffect(() => {
+    if (draftLoaded.current || countdown || template) return;
+    draftLoaded.current = true;
+    try {
+      const saved = localStorage.getItem(draftKey);
+      if (!saved) return;
+      const d = JSON.parse(saved);
+      if (d.title) setTitle(d.title);
+      if (d.description) setDescription(d.description);
+      if (d.slug) { setSlug(d.slug); checkSlug(d.slug); }
+      if (d.targetDate) setTargetDate(d.targetDate);
+      if (d.backgroundColor) setBackgroundColor(d.backgroundColor);
+      if (d.textColor) setTextColor(d.textColor);
+      if (d.accentColor) setAccentColor(d.accentColor);
+      if (d.fontFamily) setFontFamily(d.fontFamily);
+      if (d.backgroundImageUrl) setBackgroundImageUrl(d.backgroundImageUrl);
+      if (d.displayFormat) setDisplayFormat(d.displayFormat);
+      if (d.customCss) setCustomCss(d.customCss);
+      if (d.fontSize) setFontSize(d.fontSize);
+      if (d.fontWeight) setFontWeight(d.fontWeight);
+      if (d.textBorder) setTextBorder(d.textBorder);
+      if (d.textShadow) setTextShadow(d.textShadow);
+      if (d.completionTitle) setCompletionTitle(d.completionTitle);
+      if (d.completionBgColor) setCompletionBgColor(d.completionBgColor);
+      if (d.completionTextColor) setCompletionTextColor(d.completionTextColor);
+      if (d.cardStyle) setCardStyle(d.cardStyle);
+      if (d.animation) setAnimation(d.animation);
+      if (d.animationImageUrl) setAnimationImageUrl(d.animationImageUrl);
+      if (d.seoKeywords) setSeoKeywords(d.seoKeywords);
+      if (d.actionButtonText) setActionButtonText(d.actionButtonText);
+      if (d.actionButtonUrl) setActionButtonUrl(d.actionButtonUrl);
+      if (d.actionButtonBgColor) setActionButtonBgColor(d.actionButtonBgColor);
+      if (d.actionButtonTextColor) setActionButtonTextColor(d.actionButtonTextColor);
+      if (d.actionButtonRadius) setActionButtonRadius(d.actionButtonRadius);
+      if (d.actionButtonHoverColor) setActionButtonHoverColor(d.actionButtonHoverColor);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-save draft to localStorage on every change
+  const saveTimeout = useRef<ReturnType<typeof setTimeout>>(null);
+  useEffect(() => {
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(() => {
+      // Only save if there's meaningful content
+      if (!title && !targetDate) return;
+      try {
+        localStorage.setItem(
+          draftKey,
+          JSON.stringify({
+            title, description, slug, targetDate,
+            backgroundColor, textColor, accentColor, fontFamily,
+            backgroundImageUrl, displayFormat, customCss,
+            fontSize, fontWeight, textBorder, textShadow,
+            completionTitle, completionBgColor, completionTextColor,
+            cardStyle, animation, animationImageUrl, seoKeywords,
+            actionButtonText, actionButtonUrl, actionButtonBgColor,
+            actionButtonTextColor, actionButtonRadius, actionButtonHoverColor,
+            updatedAt: new Date().toISOString(),
+            countdownId: countdown?.id,
+          })
+        );
+      } catch {}
+    }, 500);
+    return () => { if (saveTimeout.current) clearTimeout(saveTimeout.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    title, description, slug, targetDate,
+    backgroundColor, textColor, accentColor, fontFamily,
+    backgroundImageUrl, displayFormat, customCss,
+    fontSize, fontWeight, textBorder, textShadow,
+    completionTitle, completionBgColor, completionTextColor,
+    cardStyle, animation, animationImageUrl, seoKeywords,
+    actionButtonText, actionButtonUrl, actionButtonBgColor,
+    actionButtonTextColor, actionButtonRadius, actionButtonHoverColor,
+  ]);
+
   const checkSlug = useCallback(
     (value: string) => {
       if (slugTimeout.current) clearTimeout(slugTimeout.current);
@@ -185,6 +268,7 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
       const action = countdown ? updateCountdown : createCountdown;
       const result = await action(formData);
       if (result.success) {
+        try { localStorage.removeItem(draftKey); } catch {}
         router.push("/dashboard");
       } else {
         setError(result.error ?? "Something went wrong");
