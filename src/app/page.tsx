@@ -19,9 +19,38 @@ const featureKeys = [
 export default async function Home() {
   const { userId } = await auth();
   const { dictionary: d } = await getServerDictionary();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: "CountdownHub",
+      url: appUrl,
+      description: t(d, "home.heroDescription"),
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Any",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "CountdownHub",
+      url: appUrl,
+      logo: `${appUrl}/logo.png`,
+    },
+  ];
 
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       {/* Hero */}

@@ -1,9 +1,14 @@
 import { UserButton } from "@clerk/nextjs";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { getServerDictionary, t } from "@/lib/i18n/server";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function DashboardLayout({
   children,

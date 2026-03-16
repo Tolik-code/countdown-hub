@@ -67,11 +67,17 @@ export default async function CountdownPage({ params }: SlugPageProps) {
     description: countdown.description || `Countdown to ${countdown.title}`,
     startDate: countdown.targetDate.toISOString(),
     url: `${appUrl}/${slug}`,
+    image: `${appUrl}/${slug}/opengraph-image`,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
     location: {
       "@type": "VirtualLocation",
       url: `${appUrl}/${slug}`,
+    },
+    organizer: {
+      "@type": "Organization",
+      name: "CountdownHub",
+      url: appUrl,
     },
   };
 

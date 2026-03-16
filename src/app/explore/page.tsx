@@ -10,9 +10,27 @@ import { getServerDictionary, t } from "@/lib/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { dictionary: d } = await getServerDictionary();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const title = t(d, "explore.metaTitle");
+  const description = t(d, "explore.metaDescription");
   return {
-    title: t(d, "explore.metaTitle"),
-    description: t(d, "explore.metaDescription"),
+    title,
+    description,
+    keywords: ["countdown timer", "explore countdowns", "countdown templates", "event timer", "community countdowns"],
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: `${appUrl}/explore`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `${appUrl}/explore`,
+    },
   };
 }
 

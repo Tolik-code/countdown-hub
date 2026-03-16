@@ -4,9 +4,15 @@ import { getServerDictionary, t } from "@/lib/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { dictionary: d } = await getServerDictionary();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const title = t(d, "privacy.metaTitle");
+  const description = t(d, "privacy.metaDescription");
   return {
-    title: t(d, "privacy.metaTitle"),
-    description: t(d, "privacy.metaDescription"),
+    title,
+    description,
+    openGraph: { title, description, type: "website", url: `${appUrl}/privacy` },
+    twitter: { card: "summary", title, description },
+    alternates: { canonical: `${appUrl}/privacy` },
   };
 }
 

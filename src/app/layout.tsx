@@ -9,6 +9,8 @@ import "./globals.css";
 
 const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: {
     default: "CountdownHub — Create & Share Custom Countdown Timers",
@@ -28,12 +30,11 @@ export const metadata: Metadata = {
     "share countdown",
     "countdown widget",
   ],
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL(appUrl),
   openGraph: {
     type: "website",
     siteName: "CountdownHub",
+    locale: "en_US",
     title: "CountdownHub — Create & Share Custom Countdown Timers",
     description:
       "Create beautiful, customizable countdown timer pages for free. Share them with a link or embed on your website.",
@@ -47,6 +48,14 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  alternates: {
+    canonical: appUrl,
+    languages: {
+      "en": appUrl,
+      "uk": appUrl,
+      "x-default": appUrl,
+    },
   },
   ...(process.env.NEXT_PUBLIC_ADSENSE_ID
     ? {
