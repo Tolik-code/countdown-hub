@@ -132,9 +132,44 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadingAnim, setUploadingAnim] = useState(false);
 
+  // Single map of all draft-able fields: [value, setter]
+  const draftFields: Record<string, [string, (v: string) => void]> = {
+    title: [title, setTitle],
+    description: [description, setDescription],
+    slug: [slug, setSlug],
+    targetDate: [targetDate, setTargetDate],
+    backgroundColor: [backgroundColor, setBackgroundColor],
+    textColor: [textColor, setTextColor],
+    accentColor: [accentColor, setAccentColor],
+    fontFamily: [fontFamily, setFontFamily],
+    backgroundImageUrl: [backgroundImageUrl, setBackgroundImageUrl],
+    displayFormat: [displayFormat, setDisplayFormat],
+    customCss: [customCss, setCustomCss],
+    fontSize: [fontSize, setFontSize],
+    fontWeight: [fontWeight, setFontWeight],
+    textBorder: [textBorder, setTextBorder],
+    textShadow: [textShadow, setTextShadow],
+    completionTitle: [completionTitle, setCompletionTitle],
+    completionBgColor: [completionBgColor, setCompletionBgColor],
+    completionTextColor: [completionTextColor, setCompletionTextColor],
+    cardStyle: [cardStyle, setCardStyle],
+    animation: [animation, setAnimation],
+    animationImageUrl: [animationImageUrl, setAnimationImageUrl],
+    seoKeywords: [seoKeywords, setSeoKeywords],
+    actionButtonText: [actionButtonText, setActionButtonText],
+    actionButtonUrl: [actionButtonUrl, setActionButtonUrl],
+    actionButtonBgColor: [actionButtonBgColor, setActionButtonBgColor],
+    actionButtonTextColor: [actionButtonTextColor, setActionButtonTextColor],
+    actionButtonRadius: [actionButtonRadius, setActionButtonRadius],
+    actionButtonHoverColor: [actionButtonHoverColor, setActionButtonHoverColor],
+  };
+
   const draftKey = countdown
     ? `countdown-draft-edit-${countdown.id}`
     : "countdown-draft-new";
+
+  // Snapshot of all field values for save effect dependency
+  const draftSnapshot = Object.values(draftFields).map(([v]) => v).join("\0");
 
   // Load draft from localStorage on mount (only for new countdowns without template)
   const draftLoaded = useRef(false);
@@ -144,35 +179,11 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
     try {
       const saved = localStorage.getItem(draftKey);
       if (!saved) return;
-      const d = JSON.parse(saved);
-      if (d.title) setTitle(d.title);
-      if (d.description) setDescription(d.description);
-      if (d.slug) { setSlug(d.slug); checkSlug(d.slug); }
-      if (d.targetDate) setTargetDate(d.targetDate);
-      if (d.backgroundColor) setBackgroundColor(d.backgroundColor);
-      if (d.textColor) setTextColor(d.textColor);
-      if (d.accentColor) setAccentColor(d.accentColor);
-      if (d.fontFamily) setFontFamily(d.fontFamily);
-      if (d.backgroundImageUrl) setBackgroundImageUrl(d.backgroundImageUrl);
-      if (d.displayFormat) setDisplayFormat(d.displayFormat);
-      if (d.customCss) setCustomCss(d.customCss);
-      if (d.fontSize) setFontSize(d.fontSize);
-      if (d.fontWeight) setFontWeight(d.fontWeight);
-      if (d.textBorder) setTextBorder(d.textBorder);
-      if (d.textShadow) setTextShadow(d.textShadow);
-      if (d.completionTitle) setCompletionTitle(d.completionTitle);
-      if (d.completionBgColor) setCompletionBgColor(d.completionBgColor);
-      if (d.completionTextColor) setCompletionTextColor(d.completionTextColor);
-      if (d.cardStyle) setCardStyle(d.cardStyle);
-      if (d.animation) setAnimation(d.animation);
-      if (d.animationImageUrl) setAnimationImageUrl(d.animationImageUrl);
-      if (d.seoKeywords) setSeoKeywords(d.seoKeywords);
-      if (d.actionButtonText) setActionButtonText(d.actionButtonText);
-      if (d.actionButtonUrl) setActionButtonUrl(d.actionButtonUrl);
-      if (d.actionButtonBgColor) setActionButtonBgColor(d.actionButtonBgColor);
-      if (d.actionButtonTextColor) setActionButtonTextColor(d.actionButtonTextColor);
-      if (d.actionButtonRadius) setActionButtonRadius(d.actionButtonRadius);
-      if (d.actionButtonHoverColor) setActionButtonHoverColor(d.actionButtonHoverColor);
+      const data = JSON.parse(saved);
+      for (const [key, [, setter]] of Object.entries(draftFields)) {
+        if (data[key] != null) setter(data[key]);
+      }
+      if (data.slug?.length >= 3) checkSlug(data.slug);
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -182,38 +193,20 @@ export function CountdownForm({ countdown, template }: CountdownFormProps) {
   useEffect(() => {
     if (saveTimeout.current) clearTimeout(saveTimeout.current);
     saveTimeout.current = setTimeout(() => {
-      // Only save if there's meaningful content
       if (!title && !targetDate) return;
       try {
-        localStorage.setItem(
-          draftKey,
-          JSON.stringify({
-            title, description, slug, targetDate,
-            backgroundColor, textColor, accentColor, fontFamily,
-            backgroundImageUrl, displayFormat, customCss,
-            fontSize, fontWeight, textBorder, textShadow,
-            completionTitle, completionBgColor, completionTextColor,
-            cardStyle, animation, animationImageUrl, seoKeywords,
-            actionButtonText, actionButtonUrl, actionButtonBgColor,
-            actionButtonTextColor, actionButtonRadius, actionButtonHoverColor,
-            updatedAt: new Date().toISOString(),
-            countdownId: countdown?.id,
-          })
-        );
+        const data: Record<string, string> = {};
+        for (const [key, [value]] of Object.entries(draftFields)) {
+          data[key] = value;
+        }
+        data.updatedAt = new Date().toISOString();
+        if (countdown?.id) data.countdownId = countdown.id;
+        localStorage.setItem(draftKey, JSON.stringify(data));
       } catch {}
     }, 500);
     return () => { if (saveTimeout.current) clearTimeout(saveTimeout.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    title, description, slug, targetDate,
-    backgroundColor, textColor, accentColor, fontFamily,
-    backgroundImageUrl, displayFormat, customCss,
-    fontSize, fontWeight, textBorder, textShadow,
-    completionTitle, completionBgColor, completionTextColor,
-    cardStyle, animation, animationImageUrl, seoKeywords,
-    actionButtonText, actionButtonUrl, actionButtonBgColor,
-    actionButtonTextColor, actionButtonRadius, actionButtonHoverColor,
-  ]);
+  }, [draftSnapshot]);
 
   const checkSlug = useCallback(
     (value: string) => {
